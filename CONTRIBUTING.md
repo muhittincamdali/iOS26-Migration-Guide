@@ -1,59 +1,80 @@
-# Contributing to iOS 26 Migration Guide
+# Contributing to SwiftRouter
 
-Thank you for helping improve this migration guide! 🎉
+First off, thank you for considering contributing to SwiftRouter! It's people like you that make SwiftRouter such a great tool.
 
-## How to Contribute
+## Code of Conduct
 
-### Reporting Issues
+This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code.
 
-- Found outdated information? Open an issue!
-- Discovered a missing migration step? Let us know!
-- Use the appropriate issue template
+## How Can I Contribute?
 
-### Suggesting Content
+### Reporting Bugs
 
-1. Check existing documentation first
-2. Open a feature request with details
-3. Explain the migration scenario
+Before creating bug reports, please check the existing issues as you might find out that you don't need to create one. When you are creating a bug report, please include as many details as possible:
 
-### Submitting Changes
+- **Use a clear and descriptive title**
+- **Describe the exact steps which reproduce the problem**
+- **Provide specific examples to demonstrate the steps**
+- **Describe the behavior you observed after following the steps**
+- **Explain which behavior you expected to see instead and why**
+- **Include Swift version and OS version**
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/new-migration-tip`)
-3. Make your changes
-4. Test any code examples
-5. Commit (`git commit -m 'Add: migration guide for X'`)
-6. Push (`git push origin feature/new-migration-tip`)
-7. Open a Pull Request
+### Suggesting Enhancements
 
-## Content Guidelines
+Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, please include:
 
-### Code Examples
+- **Use a clear and descriptive title**
+- **Provide a step-by-step description of the suggested enhancement**
+- **Provide specific examples to demonstrate the steps**
+- **Describe the current behavior and explain which behavior you expected to see instead**
+- **Explain why this enhancement would be useful**
 
-- Must compile and work on iOS 26
-- Include before/after comparisons
-- Add comments explaining changes
+### Pull Requests
 
-### Documentation
+1. Fork the repo and create your branch from `main`
+2. If you've added code that should be tested, add tests
+3. If you've changed APIs, update the documentation
+4. Ensure the test suite passes
+5. Make sure your code follows the existing style (SwiftLint)
+6. Issue that pull request!
 
-- Clear and concise language
-- Include version numbers
-- Link to official Apple documentation
-- Provide workarounds where applicable
+## Development Setup
+
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/SwiftRouter.git
+
+# Navigate to the project
+cd SwiftRouter
+
+# Open in Xcode
+open Package.swift
+
+# Run tests
+swift test
+```
 
 ## Style Guide
 
-- Use Markdown formatting
-- Follow existing document structure
-- Include code syntax highlighting
-- Add table of contents for long documents
+- Follow [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
+- Use SwiftLint for code style consistency
+- Write meaningful commit messages following [Conventional Commits](https://www.conventionalcommits.org/)
+- Document public APIs with DocC-compatible comments
 
-## Testing
+## Commit Messages
 
-- Verify code examples compile
-- Test on latest Xcode beta
-- Check all links work
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
 
-## Questions?
+- `feat:` A new feature
+- `fix:` A bug fix
+- `docs:` Documentation only changes
+- `style:` Code style changes (formatting, semicolons, etc)
+- `refactor:` Code change that neither fixes a bug nor adds a feature
+- `test:` Adding missing tests
+- `chore:` Changes to the build process or auxiliary tools
 
-Open a discussion or issue - we're happy to help!
+Example: `feat(deeplink): add universal link support`
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the MIT License.

@@ -1,39 +1,47 @@
 ## Description
 
-<!-- What changes does this PR introduce? -->
+<!-- Describe your changes in detail -->
+
+## Related Issue
+
+<!-- Please link to the issue here using #issue_number -->
+
+Fixes #
 
 ## Type of Change
 
-- [ ] New migration guide
-- [ ] Code example update
-- [ ] Bug fix (incorrect info)
-- [ ] Content improvement
-- [ ] Broken link fix
-- [ ] Other
+<!-- Put an `x` in all the boxes that apply -->
 
-## iOS/Xcode Version
-
-- iOS version: 
-- Xcode version: 
-
-## Verification
-
-- [ ] Code examples compile on latest Xcode
-- [ ] Tested on iOS 26 Simulator/Device
-- [ ] Links are working
-- [ ] Follows existing documentation style
+- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
+- [ ] ✨ New feature (non-breaking change which adds functionality)
+- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] 🧭 New navigation pattern
+- [ ] 📝 Documentation update
+- [ ] 🔧 Refactoring (no functional changes)
 
 ## Checklist
 
-- [ ] I have read the [Contributing Guidelines](../CONTRIBUTING.md)
-- [ ] Changes are accurate and verified
-- [ ] Added before/after code comparisons (if applicable)
-- [ ] Referenced official Apple documentation
+<!-- Put an `x` in all the boxes that apply -->
 
-## Related Issues
+- [ ] My code follows the project's style guidelines
+- [ ] I have performed a self-review of my own code
+- [ ] I have tested navigation flows thoroughly
+- [ ] I have made corresponding changes to the documentation
+- [ ] My changes generate no new warnings
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] New and existing unit tests pass locally with my changes
 
-<!-- Fixes #123 -->
+## Navigation Scenarios Tested
+
+<!-- Put an `x` in all the boxes that apply -->
+
+- [ ] Push/Pop navigation
+- [ ] Modal presentation
+- [ ] Tab switching
+- [ ] Deep link handling
+- [ ] Back navigation
+- [ ] State restoration
 
 ## Additional Notes
 
-<!-- Screenshots, context, etc. -->
+<!-- Add any additional notes for reviewers -->

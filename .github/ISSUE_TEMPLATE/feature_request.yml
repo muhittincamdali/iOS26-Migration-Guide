@@ -1,60 +1,62 @@
 name: Feature Request
-description: Suggest new migration content or improvements
+description: Suggest an idea for this project
 title: "[Feature]: "
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Help us make this guide more comprehensive!
+        Thanks for suggesting a feature! Please fill out the information below.
 
   - type: textarea
-    id: description
+    id: problem
     attributes:
-      label: Description
-      description: What would you like to see added?
-      placeholder: Describe your suggestion...
+      label: Problem Statement
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: A clear and concise description of what the problem is.
     validations:
       required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like
+      placeholder: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed API
+      description: If applicable, show how you envision the API
+      render: swift
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or features you've considered.
 
   - type: dropdown
     id: category
     attributes:
       label: Category
       options:
-        - New Framework Migration
-        - API Change Documentation
-        - Code Example
-        - Troubleshooting Guide
-        - Best Practice
+        - Navigation Pattern
+        - Deep Linking
+        - State Management
+        - Animation/Transition
+        - API Improvement
+        - Documentation
         - Other
     validations:
       required: true
-
-  - type: textarea
-    id: rationale
-    attributes:
-      label: Rationale
-      description: Why is this needed?
-      placeholder: Many developers struggle with...
-    validations:
-      required: true
-
-  - type: textarea
-    id: resources
-    attributes:
-      label: Resources
-      description: Any references or links?
-      placeholder: |
-        - Apple Docs: https://developer.apple.com/...
-        - WWDC Session: ...
-    validations:
-      required: false
 
   - type: checkboxes
     id: contribution
     attributes:
       label: Contribution
       options:
-        - label: I can help write this content
-          required: false
+        - label: I would be willing to submit a PR for this feature

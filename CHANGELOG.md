@@ -8,21 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Comprehensive iOS 26 migration guide
-- API deprecation checklists
-- Code migration examples
-- Compatibility matrices
+- visionOS navigation support
 
-### Changed
-- Updated for latest iOS 26 beta releases
-
-## [1.0.0] - 2025-06-01
+## [1.0.0] - 2024-01-15
 
 ### Added
-- Initial migration documentation
-- Breaking changes list
-- Step-by-step upgrade guide
-- Common issues and solutions
+- Type-safe navigation with compile-time checks
+- SwiftUI NavigationStack integration
+- Deep linking support with URL parsing
+- Tab bar coordination
+- Modal presentation handling
+- Navigation state persistence
+- Route parameters with type safety
+- Navigation interceptors (guards)
+- Animated transitions
+- Back stack management
+- Child router support (coordinator pattern)
 
-[Unreleased]: https://github.com/muhittincamdali/iOS26-Migration-Guide/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/muhittincamdali/iOS26-Migration-Guide/releases/tag/v1.0.0
+### Features
+- Zero dependencies
+- Protocol-oriented design
+- Full async/await support
+
+[Unreleased]: https://github.com/muhittincamdali/SwiftRouter/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/muhittincamdali/SwiftRouter/releases/tag/v1.0.0

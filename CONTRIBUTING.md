@@ -1,70 +1,59 @@
 # Contributing to iOS 26 Migration Guide
 
-First off, thanks for taking the time to contribute! 🎉
+Thank you for helping improve this migration guide! 🎉
 
-This guide is a community effort, and every contribution makes it better for everyone migrating to iOS 26.
-
-## How Can I Contribute?
+## How to Contribute
 
 ### Reporting Issues
 
-- **Inaccurate information**: If you find something that doesn't match Apple's documentation or your real-world experience, please open an issue.
-- **Missing topics**: If a migration scenario isn't covered, let us know.
-- **Broken links**: Report any dead links you encounter.
+- Found outdated information? Open an issue!
+- Discovered a missing migration step? Let us know!
+- Use the appropriate issue template
 
-### Submitting Pull Requests
+### Suggesting Content
 
-1. **Fork** the repository
-2. **Create** a feature branch: `git checkout -b docs/your-topic`
-3. **Make** your changes
-4. **Commit** with a clear message: `docs: add migration notes for PhotosUI`
-5. **Push** to your fork and open a **Pull Request**
+1. Check existing documentation first
+2. Open a feature request with details
+3. Explain the migration scenario
 
-### Writing Guidelines
+### Submitting Changes
 
-- **Language**: All content must be in English
-- **Code examples**: Use Swift with proper syntax highlighting (` ```swift `)
-- **Before/After**: When documenting changes, show the old way and the new way
-- **Be specific**: Include minimum deployment targets and SDK versions
-- **Link sources**: Reference Apple documentation, WWDC sessions, or release notes
-- **No opinions**: Stick to facts and practical guidance
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/new-migration-tip`)
+3. Make your changes
+4. Test any code examples
+5. Commit (`git commit -m 'Add: migration guide for X'`)
+6. Push (`git push origin feature/new-migration-tip`)
+7. Open a Pull Request
 
-### Commit Convention
-
-We follow [Conventional Commits](https://www.conventionalcommits.org/):
-
-```
-docs: add Core Location migration notes
-fix: correct SwiftData code example
-feat: add watchOS migration section
-chore: update table of contents
-```
-
-### File Structure
-
-- `README.md` — Main guide with overview of all topics
-- `docs/*.md` — Deep-dive documents for specific topics
-- Keep each doc focused on a single topic
-- Add new docs to the Table of Contents in README.md
+## Content Guidelines
 
 ### Code Examples
 
-- Must compile (or be clearly marked as pseudocode)
-- Use iOS 26 SDK / Swift 6.2 syntax
-- Include `import` statements when relevant
-- Keep examples minimal but complete
+- Must compile and work on iOS 26
+- Include before/after comparisons
+- Add comments explaining changes
 
-### Style
+### Documentation
 
-- Use `##` for main sections, `###` for subsections
-- Use tables for comparison data
-- Use checkbox lists (`- [ ]`) for actionable items
-- Add horizontal rules (`---`) between major sections
+- Clear and concise language
+- Include version numbers
+- Link to official Apple documentation
+- Provide workarounds where applicable
 
-## Code of Conduct
+## Style Guide
 
-Be respectful, constructive, and welcoming. We're all here to learn.
+- Use Markdown formatting
+- Follow existing document structure
+- Include code syntax highlighting
+- Add table of contents for long documents
+
+## Testing
+
+- Verify code examples compile
+- Test on latest Xcode beta
+- Check all links work
 
 ## Questions?
 
-Open a [Discussion](../../discussions) if you're unsure about something. We're happy to help!
+Open a discussion or issue - we're happy to help!

@@ -1,0 +1,60 @@
+name: Feature Request
+description: Suggest new migration content or improvements
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us make this guide more comprehensive!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What would you like to see added?
+      placeholder: Describe your suggestion...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - New Framework Migration
+        - API Change Documentation
+        - Code Example
+        - Troubleshooting Guide
+        - Best Practice
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: Why is this needed?
+      placeholder: Many developers struggle with...
+    validations:
+      required: true
+
+  - type: textarea
+    id: resources
+    attributes:
+      label: Resources
+      description: Any references or links?
+      placeholder: |
+        - Apple Docs: https://developer.apple.com/...
+        - WWDC Session: ...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I can help write this content
+          required: false

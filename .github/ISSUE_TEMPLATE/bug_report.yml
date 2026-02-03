@@ -1,0 +1,72 @@
+name: Bug Report
+description: Report incorrect info, outdated content, or broken examples
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve this guide!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What issue did you find?
+      placeholder: Describe the problem...
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Location
+      description: Where is the issue?
+      placeholder: |
+        - File: README.md
+        - Section: UIKit Migration
+        - Line: 125
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Issue Type
+      options:
+        - Incorrect Information
+        - Outdated Content
+        - Code Doesn't Compile
+        - Missing Migration Step
+        - Broken Link
+        - Typo
+    validations:
+      required: true
+
+  - type: input
+    id: xcode
+    attributes:
+      label: Xcode Version
+      description: Which Xcode version are you using?
+      placeholder: "16.0 Beta 4"
+    validations:
+      required: false
+
+  - type: textarea
+    id: correct-info
+    attributes:
+      label: Correct Information
+      description: If you know the correct information
+      placeholder: What should it say instead?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues
+          required: true
+        - label: I have checked Apple's official documentation
+          required: false

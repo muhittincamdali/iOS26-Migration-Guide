@@ -1,67 +1,80 @@
-<div align="center">
+<p align="center">
+  <img src="Assets/logo.png" alt="iOS 26 Migration Guide" width="200"/>
+</p>
 
-# 📖 iOS 26 Migration Guide
+<h1 align="center">iOS 26 Migration Guide</h1>
 
-**The definitive iOS 25 → iOS 26 migration guide with Liquid Glass**
+<p align="center">
+  <strong>📖 The definitive iOS 25 → iOS 26 migration guide with Liquid Glass</strong>
+</p>
 
-[![iOS](https://img.shields.io/badge/iOS-26-000000?style=for-the-badge&logo=apple&logoColor=white)](https://developer.apple.com/ios/)
-[![Swift](https://img.shields.io/badge/Swift-6.0-F05138?style=for-the-badge&logo=swift&logoColor=white)](https://swift.org)
-[![Stars](https://img.shields.io/github/stars/muhittincamdali/iOS26-Migration-Guide?style=for-the-badge)](https://github.com/muhittincamdali/iOS26-Migration-Guide/stargazers)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-
-</div>
-
----
-
-## 📋 Contents
-
-- [What's New in iOS 26](#-whats-new)
-- [Liquid Glass](#-liquid-glass)
-- [Breaking Changes](#-breaking-changes)
-- [Migration Steps](#-migration-steps)
-- [Code Examples](#-code-examples)
+<p align="center">
+  <img src="https://img.shields.io/badge/iOS-26-blue.svg" alt="iOS 26"/>
+  <img src="https://img.shields.io/badge/Swift-6.0-orange.svg" alt="Swift"/>
+</p>
 
 ---
 
-## ✨ What's New
+## What's New in iOS 26
 
-### 🧊 Liquid Glass
-The revolutionary new design language featuring dynamic translucent materials.
+| Feature | Description |
+|---------|-------------|
+| 🧊 **Liquid Glass** | New UI paradigm |
+| 🤖 **Foundation Models** | On-device LLM |
+| 📱 **App Intents 2.0** | Enhanced Shortcuts |
+| 🔊 **Audio 2.0** | Spatial audio improvements |
+| 📸 **Vision 2.0** | Enhanced image analysis |
 
-### 🤖 Foundation Models
-On-device AI with Apple Intelligence integration.
+## Migration Checklist
 
-### 📱 Enhanced SwiftUI
-New navigation patterns and view modifiers.
+- [ ] Update to Xcode 18
+- [ ] Set deployment target to iOS 26
+- [ ] Adopt Liquid Glass design
+- [ ] Update deprecated APIs
+- [ ] Test on new simulators
+- [ ] Submit to TestFlight
 
----
+## Liquid Glass Migration
 
-## 🔄 Migration Steps
-
-### 1. Update Deployment Target
 ```swift
-// Package.swift
-platforms: [.iOS(.v26)]
+// Before (iOS 25)
+.background(.ultraThinMaterial)
+
+// After (iOS 26)
+.glassBackground()
+
+// With options
+.glassBackground(
+    style: .frosted,
+    opacity: 0.3
+)
 ```
 
-### 2. Adopt Liquid Glass
+## Foundation Models
+
 ```swift
-.liquidGlass() // New modifier
+import FoundationModels
+
+let model = try await LanguageModel.default
+
+let response = try await model.generate(
+    prompt: "Summarize this text: \(text)",
+    maxTokens: 100
+)
 ```
 
-### 3. Update Deprecated APIs
-See [Deprecation Guide](Documentation/Deprecations.md)
+## Deprecated APIs
 
----
+| Deprecated | Replacement |
+|------------|-------------|
+| `UIBlurEffect` | `LiquidGlass` |
+| `NavigationView` | `NavigationStack` |
+| `AsyncImage` | `CachedAsyncImage` |
 
-## 📚 Resources
+## Contributing
 
-- [Full Migration Checklist](Documentation/Checklist.md)
-- [Code Examples](Examples/)
-- [Troubleshooting](Documentation/Troubleshooting.md)
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
----
+## License
 
-## 📄 License
-
-MIT • [@muhittincamdali](https://github.com/muhittincamdali)
+MIT License

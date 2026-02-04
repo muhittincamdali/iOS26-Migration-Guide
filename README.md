@@ -9,8 +9,11 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/iOS-26-blue.svg" alt="iOS 26"/>
-  <img src="https://img.shields.io/badge/Swift-6.0-orange.svg" alt="Swift"/>
+  <img src="https://img.shields.io/badge/iOS-26-007AFF?style=for-the-badge&logo=apple&logoColor=white" alt="iOS 26"/>
+  <img src="https://img.shields.io/badge/Swift-6.0-FA7343?style=for-the-badge&logo=swift&logoColor=white" alt="Swift"/>
+  <img src="https://img.shields.io/badge/Xcode-16-1575F9?style=for-the-badge&logo=xcode&logoColor=white" alt="Xcode"/>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License"/>
+  <img src="https://img.shields.io/github/stars/muhittincamdali/iOS26-Migration-Guide?style=for-the-badge&logo=github" alt="Stars"/>
 </p>
 
 ---

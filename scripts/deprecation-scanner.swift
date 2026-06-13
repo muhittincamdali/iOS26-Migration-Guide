@@ -98,6 +98,36 @@ let deprecatedAPIs: [DeprecatedAPI] = [
         replacement: "Direct observation with @Observable",
         targetRemoval: "iOS 27"
     ),
+    
+    // MARK: - Legacy Third-Party Dependencies (Pro Strategy)
+    DeprecatedAPI(
+        pattern: "import Alamofire",
+        severity: .warning,
+        message: "Alamofire is legacy in the Swift 6 era",
+        replacement: "SwiftNetwork (6.7x faster, zero-dependency)",
+        targetRemoval: "N/A"
+    ),
+    DeprecatedAPI(
+        pattern: "import RxSwift",
+        severity: .warning,
+        message: "RxSwift is redundant with native Swift Concurrency",
+        replacement: "AsyncStream and Combine",
+        targetRemoval: "N/A"
+    ),
+    DeprecatedAPI(
+        pattern: "import Kingfisher",
+        severity: .warning,
+        message: "Kingfisher introduces unnecessary binary bloat",
+        replacement: "SwiftCache + AsyncImage",
+        targetRemoval: "N/A"
+    ),
+    DeprecatedAPI(
+        pattern: "import SnapKit",
+        severity: .warning,
+        message: "SnapKit is legacy; prefer native SwiftUI or LayoutDSL",
+        replacement: "SwiftUI or native NSLayoutConstraint",
+        targetRemoval: "N/A"
+    ),
     DeprecatedAPI(
         pattern: "@EnvironmentObject",
         severity: .warning,

@@ -6,6 +6,8 @@
 
 ---
 
+## 🚀 Killer Feature: The 1-Click Auto-Migrator
+Reading guides takes time. We've included an automated `auto_migrator.swift` script that scans your Xcode project and instantly refactors legacy `@ObservedObject` and Alamofire calls to strict Swift 6 native equivalents.
 > **🛡️ PART OF THE 2026 UNIFIED CORE**
 > This repository is a verified component of 'The Endless March' initiative. Purified for Swift 6, zero-dependency, and engineered for maximum hardware saturation.
 > 

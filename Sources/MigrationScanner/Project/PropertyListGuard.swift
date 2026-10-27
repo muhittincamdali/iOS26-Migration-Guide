@@ -8,7 +8,8 @@ import Foundation
 /// property list whose object graph has a cycle or does not fit its own offset table, XML that
 /// the guard could read differently from the parser (see ``XMLPropertyListScanner``), and the old
 /// OpenStep text format are all refused before parsing. Every check is iterative and linear in
-/// the size of the file.
+/// the size of the file: a binary property list is walked once per distinct object offset, and
+/// one whose containers hold more references than the file has bytes is refused.
 enum PropertyListGuard {
     static let maximumDepth = 64
     private static let binaryMagic = Array("bplist00".utf8)
@@ -58,12 +59,18 @@ private struct BinaryPropertyList {
         bytes[start..<(start + size)].reduce(0) { ($0 << 8) | UInt64($1) }
     }
 
-    /// The objects an array, set or dictionary refers to; `[]` for other objects; `nil` when the
-    /// object or its references fall outside the file.
-    private func children(of object: Int) -> [Int]? {
+    /// Where `object` starts, or `nil` when the offset table points outside the objects.
+    private func offset(of object: Int) -> Int? {
         let offset = Self.integer(bytes, at: offsetTableStart + object * offsetSize, size: offsetSize)
         guard offset >= 8, offset < UInt64(offsetTableStart) else { return nil }
-        var position = Int(offset)
+        return Int(offset)
+    }
+
+    /// Where the objects that the array, set or dictionary at `offset` refers to start; `[]` for
+    /// other objects; `nil` when the object or its references fall outside the file, or when it
+    /// would take the references read so far past `budget`.
+    private func children(at offset: Int, budget: inout Int) -> [Int]? {
+        var position = offset
         let marker = bytes[position]
         let kind = marker >> 4
         guard kind == 0xA || kind == 0xC || kind == 0xD else { return [] }
@@ -81,43 +88,50 @@ private struct BinaryPropertyList {
         let available = UInt64(offsetTableStart - position) / UInt64(referenceSize)
         guard count <= available, kind != 0xD || count <= available / 2 else { return nil }
         let references = kind == 0xD ? count * 2 : count
+        guard references <= UInt64(budget) else { return nil }
+        budget -= Int(references)
         var result: [Int] = []
         result.reserveCapacity(Int(references))
         for index in 0..<Int(references) {
             let reference = Self.integer(bytes, at: position + index * referenceSize, size: referenceSize)
-            guard reference < UInt64(objectCount) else { return nil }
-            result.append(Int(reference))
+            guard reference < UInt64(objectCount), let child = self.offset(of: Int(reference)) else { return nil }
+            result.append(child)
         }
         return result
     }
 
     /// Walks the object graph without recursion. Returns `false` for a cycle, a malformed object,
     /// or a path longer than `limit` objects, also through objects shared by several containers
-    /// (their height is remembered). Each object is expanded once.
+    /// (their height is remembered).
+    ///
+    /// Objects are told apart by their offset, so objects that share one are expanded once, as
+    /// the system parser reads them once. Containers that a writer lays out one after the other
+    /// hold fewer references in total than the file has bytes; more than that means containers
+    /// overlap, which would make the work quadratic, and the file is refused.
     func isWithinDepth(_ limit: Int) -> Bool {
-        enum State { case unvisited, inProgress, done }
-        var states = [State](repeating: .unvisited, count: objectCount)
-        var heights = [Int](repeating: 0, count: objectCount)
-        guard let rootChildren = children(of: topObject) else { return false }
-        var stack: [(object: Int, children: [Int], next: Int)] = [(topObject, rootChildren, 0)]
-        states[topObject] = .inProgress
+        var heights: [Int: Int] = [:]
+        var inProgress: Set<Int> = []
+        var budget = offsetTableStart
+        guard let root = offset(of: topObject), let rootChildren = children(at: root, budget: &budget) else {
+            return false
+        }
+        var stack: [(offset: Int, children: [Int], next: Int)] = [(root, rootChildren, 0)]
+        inProgress.insert(root)
         while let frame = stack.last {
             guard frame.next < frame.children.count else {
-                heights[frame.object] = 1 + (frame.children.map { heights[$0] }.max() ?? 0)
-                states[frame.object] = .done
+                heights[frame.offset] = 1 + (frame.children.map { heights[$0] ?? 0 }.max() ?? 0)
+                inProgress.remove(frame.offset)
                 stack.removeLast()
                 continue
             }
             stack[stack.count - 1].next += 1
             let child = frame.children[frame.next]
-            switch states[child] {
-            case .inProgress:
-                return false
-            case .done:
-                if stack.count + heights[child] > limit { return false }
-            case .unvisited:
-                guard stack.count < limit, let grandchildren = children(of: child) else { return false }
-                states[child] = .inProgress
+            if let height = heights[child] {
+                if stack.count + height > limit { return false }
+            } else {
+                guard !inProgress.contains(child), stack.count < limit,
+                      let grandchildren = children(at: child, budget: &budget) else { return false }
+                inProgress.insert(child)
                 stack.append((child, grandchildren, 0))
             }
         }

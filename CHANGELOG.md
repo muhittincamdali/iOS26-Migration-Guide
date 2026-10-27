@@ -39,6 +39,9 @@ The repository becomes a tool with guides instead of a collection of guide pages
 
 - Scanning is bounded: file size and count limits, no symbolic links followed, linear lexing and
   matching, and property lists checked for depth, cycles and out-of-range offsets before parsing.
+- The binary property list check is linear in the size of the file: objects that share an offset
+  are expanded once, and containers that overlap, holding more references than the file has
+  bytes, are refused.
 - The XML depth check reads markup as the system parser does. Markup inside a tag or a DOCTYPE
   literal, a DOCTYPE internal subset, encodings other than UTF-8, US-ASCII and ISO-8859-1
   (in UTF-7, `+ADw-` is a `<`) and any 0x00 byte (UTF-16 and UTF-32 text, with or without a

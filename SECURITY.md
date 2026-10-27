@@ -29,7 +29,10 @@ report that breaks one of them is a vulnerability:
   the size of a file, also for nested or unclosed brackets.
 - **No crash on hostile property lists.** Property lists nested deeper than 64 levels, binary
   property lists with cycles or offsets outside the file, and the OpenStep format are refused
-  before `PropertyListSerialization` reads them. XML depth is counted in one pass that reads
+  before `PropertyListSerialization` reads them. The binary check expands each distinct object
+  offset once, so objects that share an offset cost no more than one, and a binary property list
+  whose containers hold more references than the file has bytes (containers that overlap) is
+  refused, which keeps the check linear in the size of the file. XML depth is counted in one pass that reads
   markup as the system parser does, and markup the two could read differently refuses the file:
   a `<` inside a tag or a DOCTYPE, a `>` inside a quoted DOCTYPE literal, a DOCTYPE internal
   subset (and with it any entity declaration), a DOCTYPE after the root element, `<` or `>`

@@ -3,4 +3,6 @@
 *.swo
 *~
 .build/
+.swiftpm/
 xcuserdata/
+DerivedData/

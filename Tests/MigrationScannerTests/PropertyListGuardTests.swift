@@ -40,6 +40,11 @@ private func nestedArrays(_ count: Int) -> String {
     String(repeating: "<array>", count: count) + String(repeating: "</array>", count: count)
 }
 
+/// Deeper than the guard allows, and shallower than the nesting that the system parser on iOS
+/// refuses on its own (three times ``PropertyListGuard/maximumDepth`` was refused; the macOS
+/// parser read it). A test can then show on both that the parser reads this depth.
+private let nestingPastTheGuard = PropertyListGuard.maximumDepth + 8
+
 /// How deep the system parser nests the value it reads from `data`. Callers keep the nesting far
 /// below the depth that exhausts the stack, so this shows what the guard would let through.
 private func parsedDepth(_ data: Data) throws -> Int {
@@ -180,7 +185,7 @@ struct PropertyListGuardTests {
     ])
     func markupInsideDeclarations(doctype: String, attribute: String, trailer: String) throws {
         let document = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + doctype + "\n<plist version=\"1.0\"" + attribute
-            + "><dict><key>k</key>" + nestedArrays(PropertyListGuard.maximumDepth * 3) + "</dict></plist>\n" + trailer
+            + "><dict><key>k</key>" + nestedArrays(nestingPastTheGuard) + "</dict></plist>\n" + trailer
         let data = Data(document.utf8)
         #expect(try parsedDepth(data) > PropertyListGuard.maximumDepth)
         #expect(!PropertyListGuard.isSafeToParse(data))
@@ -190,7 +195,7 @@ struct PropertyListGuardTests {
     /// in UTF-7 `+ADw-` is a `<` that a byte-level count never sees.
     @Test("An encoding other than UTF-8, US-ASCII or ISO-8859-1 is refused")
     func encodings() throws {
-        let count = PropertyListGuard.maximumDepth * 3
+        let count = nestingPastTheGuard
         let hidden = String(repeating: "+ADw-array+AD4-", count: count) + String(repeating: "+ADw-/array+AD4-", count: count)
         let utf7 = Data(("<?xml version=\"1.0\" encoding=\"UTF-7\"?><plist><array>" + hidden + "</array></plist>").utf8)
         #expect(try parsedDepth(utf7) > PropertyListGuard.maximumDepth)

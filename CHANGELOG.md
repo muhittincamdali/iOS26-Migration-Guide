@@ -39,6 +39,9 @@ The repository becomes a tool with guides instead of a collection of guide pages
 
 - Scanning is bounded: file size and count limits, no symbolic links followed, linear lexing and
   matching, and property lists checked for depth, cycles and out-of-range offsets before parsing.
+- The XML depth check reads markup as the system parser does. Markup inside a tag or a DOCTYPE
+  literal, a DOCTYPE internal subset and encodings other than UTF-8, US-ASCII and ISO-8859-1
+  (in UTF-7, `+ADw-` is a `<`) are refused, so nesting can no longer be hidden from the check.
 - Reports never contain source text, and control and bidirectional characters in paths are
   escaped in every format.
 

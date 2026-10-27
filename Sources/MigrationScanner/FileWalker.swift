@@ -41,6 +41,11 @@ struct FileWalker {
             if isDirectory.boolValue {
                 walk(root, display: display, into: &files)
             } else if let kind = ScanFile.kind(forName: root.lastPathComponent) {
+                // A FIFO or device named App.swift would block the read forever.
+                guard (try? root.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true else {
+                    notices.append(Notice(kind: .unreadable, file: display))
+                    continue
+                }
                 files.append(ScanFile(url: root, displayPath: display, kind: kind))
             }
         }

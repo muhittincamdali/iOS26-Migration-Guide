@@ -86,6 +86,16 @@ struct FileWalkerTests {
         #expect(report.notices.map(\.kind) == [.unreadable])
     }
 
+    @Test("A FIFO passed as a path is not read")
+    func fifo() throws {
+        let project = try TemporaryDirectory()
+        let path = project.url.appendingPathComponent("Pipe.swift").path
+        #expect(mkfifo(path, 0o600) == 0)
+        let report = ProjectScanner().scan(paths: [URL(fileURLWithPath: path), project.url])
+        #expect(report.notices.map(\.kind) == [.unreadable])
+        #expect(report.filesScanned == 0)
+    }
+
     @Test("Paths are reported under the path the scan was given")
     func relativeDisplayPaths() throws {
         let project = try TemporaryDirectory()

@@ -34,18 +34,23 @@ struct RepositoryTests {
         #expect(listed.count == RuleCatalog.all.count)
     }
 
-    @Test("Code in the guides is copied from the example app", arguments: [
-        ("AdoptingTheSceneLifeCycle.md", "SceneDelegate.swift"),
-        ("AdoptingLiquidGlass.md", "GlassScreen.swift")
+    @Test("Code in the guides and the README is copied from the example app", arguments: [
+        "Sources/MigrationScanner/MigrationScanner.docc/AdoptingTheSceneLifeCycle.md",
+        "Sources/MigrationScanner/MigrationScanner.docc/AdoptingLiquidGlass.md",
+        "README.md"
     ])
-    func guideSnippets(article: String, source: String) throws {
-        let guide = try read("Sources/MigrationScanner/MigrationScanner.docc/\(article)")
-        let code = try read("Examples/MigrationLab/MigrationLab/\(source)")
-        let normalizedCode = Self.normalized(code)
-        let blocks = guide.components(separatedBy: "```swift\n").dropFirst().compactMap { $0.components(separatedBy: "\n```").first }
+    func copiedSnippets(document: String) throws {
+        let text = try read(document)
+        let folder = Self.root.appendingPathComponent("Examples/MigrationLab/MigrationLab")
+        let sources = try FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)
+            .filter { $0.pathExtension == "swift" }
+            .map { Self.normalized(try String(contentsOf: $0, encoding: .utf8)) }
+        let blocks = text.components(separatedBy: "```swift\n").dropFirst().compactMap { $0.components(separatedBy: "\n```").first }
         #expect(!blocks.isEmpty)
-        for block in blocks {
-            #expect(normalizedCode.contains(Self.normalized(block)), "Not in \(source):\n\(block)")
+        // Package manifest snippets are not app code.
+        for block in blocks where !block.hasPrefix("dependencies:") {
+            let snippet = Self.normalized(block)
+            #expect(sources.contains { $0.contains(snippet) }, "Not in the example app:\n\(block)")
         }
     }
 

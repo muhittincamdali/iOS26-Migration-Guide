@@ -13,6 +13,7 @@
 		5827B5A2E293A05D5E37C03A /* MigrationLabUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9871509397816E44D2190EB5 /* MigrationLabUITests.swift */; };
 		768CB954612B464771A4F66F /* LegacySample.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE48DCC2A333A0E07CF155AC /* LegacySample.swift */; };
 		7E066CF0280AF181A310CBB7 /* LabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932F0B20F8B9D975788EC0E3 /* LabModel.swift */; };
+		7E1A7D82AF70ACBC3BE9EA5E /* ReadmeSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78A74E1831AD293D4D3BF6E /* ReadmeSamples.swift */; };
 		9B3A903E735FCD7D79789938 /* MigrationScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 515B1515EBBB53685ED445E2 /* MigrationScanner */; };
 		B7A4CF50E49324CAC344673D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B991836D56DA8A87A644503F /* SceneDelegate.swift */; };
 		BDB42370228FB15C7B2D46AC /* ScannerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE53EAE6AE1E5DC4B1C75B1 /* ScannerScreen.swift */; };
@@ -39,6 +40,7 @@
 		6CE53EAE6AE1E5DC4B1C75B1 /* ScannerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerScreen.swift; sourceTree = "<group>"; };
 		932F0B20F8B9D975788EC0E3 /* LabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabModel.swift; sourceTree = "<group>"; };
 		9871509397816E44D2190EB5 /* MigrationLabUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationLabUITests.swift; sourceTree = "<group>"; };
+		A78A74E1831AD293D4D3BF6E /* ReadmeSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeSamples.swift; sourceTree = "<group>"; };
 		ACBC1518AD24366A806E1401 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B991836D56DA8A87A644503F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		C73D7444E111671856FC15B5 /* MigrationLab.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MigrationLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +105,7 @@
 				932F0B20F8B9D975788EC0E3 /* LabModel.swift */,
 				D46394731F453964F6B67477 /* LabTabBarController.swift */,
 				EE48DCC2A333A0E07CF155AC /* LegacySample.swift */,
+				A78A74E1831AD293D4D3BF6E /* ReadmeSamples.swift */,
 				085ABD0B54073E40155148D3 /* RulesScreen.swift */,
 				6CE53EAE6AE1E5DC4B1C75B1 /* ScannerScreen.swift */,
 				B991836D56DA8A87A644503F /* SceneDelegate.swift */,
@@ -201,6 +204,7 @@
 				7E066CF0280AF181A310CBB7 /* LabModel.swift in Sources */,
 				F89CD262428DA606AB349EA8 /* LabTabBarController.swift in Sources */,
 				768CB954612B464771A4F66F /* LegacySample.swift in Sources */,
+				7E1A7D82AF70ACBC3BE9EA5E /* ReadmeSamples.swift in Sources */,
 				1CD56D311D58B5FB98E2B3AC /* RulesScreen.swift in Sources */,
 				BDB42370228FB15C7B2D46AC /* ScannerScreen.swift in Sources */,
 				B7A4CF50E49324CAC344673D /* SceneDelegate.swift in Sources */,

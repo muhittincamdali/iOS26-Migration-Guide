@@ -1,536 +1,282 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/Swift-6.0-FA7343?style=for-the-badge&logo=swift&logoColor=white" alt="Swift 6.0"/>
-  <img src="https://img.shields.io/badge/Platform-iOS%20|%20macOS%20|%20visionOS-007AFF?style=for-the-badge&logo=apple&logoColor=white" alt="Platform"/>
-  <img src="https://img.shields.io/badge/Standard-Unified%20Core-5856D6?style=for-the-badge" alt="Standard"/>
-</p>
+<!-- brand:start -->
 
----
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/banner-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/banner-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/banner-light.svg" alt="iOS 26 Migration Guide: Find what the iOS 26 and iOS 27 SDKs deprecate or refuse in your app, and fix it step by step."></picture></p>
 
-## 🚀 Killer Feature: The 1-Click Auto-Migrator
-Reading guides takes time. We've included an automated `auto_migrator.swift` script that scans your Xcode project and instantly refactors legacy `@ObservedObject` and Alamofire calls to strict Swift 6 native equivalents.
-> **🛡️ PART OF THE 2026 UNIFIED CORE**
-> This repository is a verified component of 'The Endless March' initiative. Purified for Swift 6, zero-dependency, and engineered for maximum hardware saturation.
-> 
-> *Flagship Engines:* [SwiftNetwork](https://github.com/muhittincamdali/SwiftNetwork) | [SwiftAI](https://github.com/muhittincamdali/SwiftAI) | [LiquidGlassKit](https://github.com/muhittincamdali/LiquidGlassKit)
-
----
+<!-- lang-selector:start -->
+<p align="center"><a href="README.md">English</a> · <a href="README.tr.md">Türkçe</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a> · <a href="README.ko.md">한국어</a> · <a href="README.es.md">Español</a> · <a href="README.de.md">Deutsch</a> · <a href="README.fr.md">Français</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.ru.md">Русский</a></p>
+<!-- lang-selector:end -->
 
 <p align="center">
-  <img src="https://img.shields.io/badge/iOS-26-007AFF?style=for-the-badge&logo=apple&logoColor=white" alt="iOS 26"/>
-  <img src="https://img.shields.io/badge/Swift-6.2-FA7343?style=for-the-badge&logo=swift&logoColor=white" alt="Swift 6.2"/>
-  <img src="https://img.shields.io/badge/Xcode-17-1575F9?style=for-the-badge&logo=xcode&logoColor=white" alt="Xcode 17"/>
-  <img src="https://img.shields.io/badge/Liquid_Glass-Ready-00C7BE?style=for-the-badge" alt="Liquid Glass"/>
-  <img src="https://img.shields.io/github/license/muhittincamdali/iOS26-Migration-Guide?style=for-the-badge" alt="License"/>
-  <img src="https://img.shields.io/github/stars/muhittincamdali/iOS26-Migration-Guide?style=for-the-badge&logo=github" alt="Stars"/>
-</p>
-
-<h1 align="center">🚀 iOS 26 Migration Guide</h1>
-
-<p align="center">
-  <strong>The most comprehensive iOS 26 migration guide on the internet.</strong><br/>
-  Complete with code examples, automated tools, and battle-tested migration strategies.
+<a href="https://github.com/muhittincamdali/iOS26-Migration-Guide/actions/workflows/ci.yml"><img src="https://github.com/muhittincamdali/iOS26-Migration-Guide/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+<a href="https://github.com/muhittincamdali/iOS26-Migration-Guide/releases"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-version-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-version-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-version-light.svg" alt="Latest version: v2.0.0"></picture></a>
+<a href="https://github.com/muhittincamdali/iOS26-Migration-Guide/blob/main/Package.swift"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-platforms-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-platforms-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-platforms-light.svg" alt="Supported platforms: iOS 17+ · macOS 14+"></picture></a>
+<a href="https://github.com/muhittincamdali/iOS26-Migration-Guide/blob/main/Package.swift"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-language-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-language-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-language-light.svg" alt="Language version: Swift 6.2+"></picture></a>
+<a href="https://github.com/muhittincamdali/iOS26-Migration-Guide/blob/main/LICENSE"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-license-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-license-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/badge-license-light.svg" alt="License: MIT"></picture></a>
 </p>
 
 <p align="center">
-  <a href="#-quick-start">Quick Start</a> •
-  <a href="#-whats-new-in-ios-26">What's New</a> •
-  <a href="#-migration-tools">Tools</a> •
-  <a href="#-documentation">Docs</a> •
-  <a href="#-examples">Examples</a>
+<a href="#quick-start"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/button-start-en-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/button-start-en-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/button-start-en-light.svg" alt="Get started"></picture></a>
+<a href="https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/button-docs-en-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/button-docs-en-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/button-docs-en-light.svg" alt="Documentation"></picture></a>
+<a href="https://github.com/muhittincamdali/iOS26-Migration-Guide/tree/main/Examples"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/button-examples-en-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/button-examples-en-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/iOS26-Migration-Guide/main/.github/brand/button-examples-en-light.svg" alt="Examples"></picture></a>
 </p>
 
----
+<!-- brand:end -->
 
-## 🎯 Why This Guide?
+A command-line tool, a Swift library and a set of guides for moving an iOS app to the iOS 26 and
+iOS 27 SDKs. `migration-scan` reads your Swift sources, Info.plist files and Xcode build settings
+and lists what those SDKs deprecate, ignore or refuse, each with what to write instead and a link
+to Apple's documentation. It is for app developers who want the list before Xcode shows it, or
+for the changes Xcode never reports: a UIKit app without a scene manifest does not launch when
+built with the iOS 27 SDK, and the compiler says nothing about it.
 
-iOS 26 is the **biggest iOS update since iOS 7**, introducing Liquid Glass design, Swift 6.2 with approachable concurrency, and Foundation Models for on-device AI. This guide provides everything you need to migrate smoothly.
+## Highlights
 
-```
-╔══════════════════════════════════════════════════════════════════╗
-║                    iOS 26 MIGRATION AT A GLANCE                  ║
-╠══════════════════════════════════════════════════════════════════╣
-║                                                                   ║
-║  🧊 Liquid Glass Design     → Complete UI overhaul               ║
-║  ⚡ Swift 6.2 Concurrency   → Data-race safety by default        ║
-║  🤖 Foundation Models       → On-device LLM access               ║
-║  📱 SwiftUI 6.0             → New modifiers and @Observable      ║
-║  🎨 UIKit Updates           → Glass effects and new APIs         ║
-║  🛒 StoreKit 2              → Modern In-App Purchase flow        ║
-║  🎙️ App Intents             → Enhanced Siri and Shortcuts        ║
-║  💊 HealthKit               → New Medications API                ║
-║                                                                   ║
-╚══════════════════════════════════════════════════════════════════╝
-```
+- **Finds what stops an app from launching** — a UIKit app delegate without a scene manifest, or
+  with a manifest that names no scene configuration, is reported as an error, following Apple's
+  TN3187.
+- **Finds what the compiler does not warn about** — app delegate methods that UIKit stops calling
+  once the app uses scenes, `UIDesignRequiresCompatibility`, which iOS 27 ignores, and SwiftUI API
+  that is deprecated only for a future release.
+- **Every rule is checked against the SDK** — each of the 42 rules names the declaration in the
+  iOS 27.1 SDK headers or Swift interfaces it is based on (`migration-scan --explain <rule>`).
+- **Reads code, not text** — comments and strings never match, code inside string
+  interpolations does, and calls and declarations match on their argument labels.
+- **Output for every place you look** — plain text, Xcode issues, GitHub pull request annotations,
+  SARIF for code scanning, and JSON. Reports never copy source code.
+- **Guides with code that builds** — scene life cycle and Liquid Glass guides whose snippets come
+  from the MigrationLab example app that CI builds and tests.
 
----
+## Quick start
 
-## ⚡ Quick Start
+**1. Get the scanner**
 
-### 1. Run the Deprecation Scanner
-
-```bash
-# Clone the repository
+```sh
 git clone https://github.com/muhittincamdali/iOS26-Migration-Guide.git
 cd iOS26-Migration-Guide
-
-# Scan your project for deprecated APIs
-swift scripts/deprecation-scanner.swift /path/to/your/project
+swift build -c release
 ```
 
-### 2. Run Auto-Migration
+**2. Scan your app**
 
-```bash
-# Preview changes (dry run)
-./scripts/auto-migrate.sh /path/to/your/project --dry-run
-
-# Apply automatic fixes
-./scripts/auto-migrate.sh /path/to/your/project
+```sh
+.build/release/migration-scan ~/Developer/MyApp
 ```
 
-### 3. Follow the Checklist
+**3. Fix what it reports**
 
-Open [docs/checklist/complete-guide.md](docs/checklist/complete-guide.md) and work through each section systematically.
+Each finding says where, why and what to write instead. Two of the 21 findings for the legacy app
+in [the test fixtures](Tests/MigrationScannerTests/Fixtures/LegacyApp/LegacyApp):
 
----
+```text
+LegacyApp/LegacyApp/AppDelegate.swift:3:1: error: The app does not adopt the scene life cycle [scene-manifest-missing]
+    This UIKit app has no UIApplicationSceneManifest. Built with the iOS 27 SDK, an app without the scene life cycle does not launch.
+    Fix: Add a UIApplicationSceneManifest with a window scene configuration to Info.plist, add a UIWindowSceneDelegate and create the window in scene(_:willConnectTo:options:).
+    See: https://developer.apple.com/documentation/technotes/tn3187-migrating-to-the-uikit-scene-based-life-cycle
+…
+LegacyApp/LegacyApp/AppDelegate.swift:11:43: warning: UIScreen.main [uiscreen-main]
+    With scenes and external displays an app can be on more than one screen, so there is no single main screen; deprecated in iOS 26.0.
+    Fix: Use view.window?.windowScene?.screen, or a trait such as traitCollection.displayScale for the scale.
+    See: https://developer.apple.com/documentation/uikit/uiscreen/main
+…
+3 errors, 14 warnings, 4 info in 4 files.
+```
 
-## ✨ What's New in iOS 26
+Start with the errors. The [scene life cycle guide](https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/adoptingthescenelifecycle)
+walks through the most common one step by step.
 
-### 🧊 Liquid Glass Design
+## Installation
 
-The most significant visual change since iOS 7.
+### Command line
+
+Build it from a clone as in the quick start; the command is `.build/release/migration-scan`. To
+run it without a clone, add the package to another package's dependencies and call
+`swift run migration-scan`.
+
+### Swift Package Manager
+
+In Xcode, choose **File › Add Package Dependencies…** and enter the repository URL:
+
+```text
+https://github.com/muhittincamdali/iOS26-Migration-Guide.git
+```
+
+Or add it to the `dependencies` in your `Package.swift`:
 
 ```swift
-// ❌ iOS 25 - Material backgrounds
-.background(.ultraThinMaterial)
-.background(.regularMaterial)
-.background(.thickMaterial)
-
-// ✅ iOS 26 - Liquid Glass
-.glassEffect(.subtle)
-.glassEffect()
-.glassEffect(.prominent)
+dependencies: [
+    .package(url: "https://github.com/muhittincamdali/iOS26-Migration-Guide.git", from: "2.0.0")
+],
+targets: [
+    .target(name: "YourTool", dependencies: [
+        .product(name: "MigrationScanner", package: "iOS26-Migration-Guide")
+    ])
+]
 ```
 
-<details>
-<summary><b>See Full Liquid Glass Migration Table</b></summary>
+## Usage
 
-| iOS 25 Material | iOS 26 Liquid Glass |
-|-----------------|---------------------|
-| `.ultraThinMaterial` | `.glassEffect(.subtle)` |
-| `.thinMaterial` | `.glassEffect(.light)` |
-| `.regularMaterial` | `.glassEffect()` |
-| `.thickMaterial` | `.glassEffect(.prominent)` |
-| `.ultraThickMaterial` | `.glassEffect(.opaque)` |
+### Choose what to report
 
-</details>
+```sh
+migration-scan --min-severity warning MyApp                      # errors and warnings only
+migration-scan --disable navigation-view,foreground-color MyApp  # skip rules
+migration-scan --only scene-manifest-missing MyApp               # run only these rules
+migration-scan --exclude Generated MyApp                         # skip folders by name
+migration-scan --list-rules                                      # every rule
+```
 
-### ⚡ Swift 6.2 Concurrency
+The exit status is 1 when a finding reaches `--fail-on` (`error` by default; `warning`, `info`
+or `never`), 2 for a wrong command line, and 0 otherwise.
+
+### Show findings in Xcode
+
+Add a Run Script build phase; Xcode lists each finding in the issue navigator:
+
+```sh
+"$HOME/Developer/iOS26-Migration-Guide/.build/release/migration-scan" --format xcode --fail-on never "$SRCROOT"
+```
+
+Turn off `ENABLE_USER_SCRIPT_SANDBOXING` for that target, or the script cannot read the sources.
+
+### Annotate pull requests
+
+```yaml
+- uses: actions/checkout@v7
+  with:
+    repository: muhittincamdali/iOS26-Migration-Guide
+    path: .migration-scan
+- run: |
+    swift build -c release --package-path .migration-scan
+    .migration-scan/.build/release/migration-scan --format github .
+```
+
+`--format sarif` writes a report for GitHub code scanning instead; see the
+[CI guide](https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/runninginxcodeandci).
+
+### Keep a finding on purpose
 
 ```swift
-// ❌ iOS 25 - Completion handlers
-func fetchUser(id: String, completion: @escaping (Result<User, Error>) -> Void) {
-    URLSession.shared.dataTask(with: url) { data, response, error in
-        DispatchQueue.main.async {
-            // Handle result
-        }
-    }.resume()
-}
-
-// ✅ iOS 26 - Async/await with strict concurrency
-@MainActor
-func fetchUser(id: String) async throws -> User {
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try JSONDecoder().decode(User.self, from: data)
-}
+Text(caption)
+    .foregroundColor(.secondary) // migration-scan:ignore foreground-color -- shared with the iOS 17 widget
 ```
 
-### 🤖 Foundation Models
+A comment after code applies to its line, a comment on its own line to the next line, and
+`// migration-scan:ignore-file <rules>` to the whole file. A comment that names an unknown rule is
+reported instead of silently suppressing nothing.
 
-On-device LLM capabilities for the first time.
+### Scan from Swift
 
 ```swift
-import FoundationModels
-
-// Initialize on-device model
-let model = try await LanguageModel.default
-
-// Generate text
-let response = try await model.generate(
-    prompt: "Summarize this email: \(emailContent)",
-    maxTokens: 500
-)
-
-// Stream responses
-for try await chunk in model.stream(prompt: userQuery) {
-    print(chunk.text, terminator: "")
+func scanProject(at folder: URL) -> String {
+    let report = ProjectScanner().scan(paths: [folder])
+    return ReportFormatter.format(report, as: .text)
 }
 ```
-
-### 📱 SwiftUI Updates
 
 ```swift
-// ❌ iOS 25 - ObservableObject pattern
-class ViewModel: ObservableObject {
-    @Published var items: [Item] = []
-}
-
-struct ContentView: View {
-    @StateObject var viewModel = ViewModel()
-}
-
-// ✅ iOS 26 - @Observable macro
-@Observable
-class ViewModel {
-    var items: [Item] = []
-}
-
-struct ContentView: View {
-    @State var viewModel = ViewModel()
+func blockingFindings(in folder: URL) -> [Finding] {
+    var configuration = ScanConfiguration(minimumSeverity: .warning)
+    configuration.excludedDirectoryNames.insert("Generated")
+    let report = ProjectScanner(configuration: configuration).scan(paths: [folder])
+    return report.findings.filter { $0.severity == .error }
 }
 ```
 
----
-
-## 🛠️ Migration Tools
-
-### Deprecation Scanner
-
-Scans your entire codebase for deprecated APIs and provides migration guidance.
-
-```bash
-swift scripts/deprecation-scanner.swift ./MyApp --report ./report.md
-
-# Output:
-# 📁 Files Scanned: 247
-# 🔴 Errors (will not compile): 12
-# 🟡 Warnings (deprecated): 34
-# 🔵 Info (recommendations): 56
-```
-
-**Features:**
-- ✅ Detects removed APIs (compile errors)
-- ✅ Identifies deprecated APIs (warnings)
-- ✅ Provides replacement suggestions
-- ✅ Generates markdown reports
-- ✅ Estimates migration effort
-
-### Auto-Migration Script
-
-Automatically fixes common deprecated patterns.
-
-```bash
-./scripts/auto-migrate.sh ./MyApp
-
-# Automatic fixes:
-# ✅ NavigationView → NavigationStack
-# ✅ @StateObject → @State
-# ✅ .navigationBarTitle → .navigationTitle
-# ✅ Material backgrounds → Glass effects
-# ✅ UIScreen.main → windowScene
-```
-
----
-
-## 📚 Documentation
-
-### Core Guides
-
-| Guide | Description | Status |
-|-------|-------------|--------|
-| [Swift 6 Migration](docs/swift6/migration.md) | Complete async/await and concurrency guide | ✅ Complete |
-| [SwiftUI Changes](docs/swiftui-changes.md) | All SwiftUI updates and deprecations | ✅ Complete |
-| [UIKit Changes](docs/uikit-changes.md) | UIKit deprecations and new APIs | ✅ Complete |
-| [Liquid Glass Implementation](docs/liquid-glass/implementation.md) | Full Liquid Glass implementation guide | ✅ Complete |
-| [Liquid Glass Best Practices](docs/liquid-glass/best-practices.md) | Design patterns and performance tips | ✅ Complete |
-
-### Framework Guides
-
-| Framework | Guide | Key Changes |
-|-----------|-------|-------------|
-| App Intents | [Migration Guide](docs/frameworks/app-intents.md) | SiriKit → App Intents |
-| StoreKit | [Migration Guide](docs/frameworks/storekit.md) | StoreKit 1 → StoreKit 2 |
-| HealthKit | [Migration Guide](docs/frameworks/healthkit.md) | New Medications API |
-| Core ML | [Migration Guide](docs/frameworks/foundation-models.md) | Foundation Models |
-
-### Planning Resources
-
-| Resource | Description |
-|----------|-------------|
-| [Complete Checklist](docs/checklist/complete-guide.md) | Comprehensive migration checklist |
-| [Timeline Recommendations](docs/timeline-recommendations.md) | Week-by-week migration plan |
-| [Testing Guide](docs/testing.md) | Testing strategies and best practices |
-
----
-
-## 🔥 Breaking Changes Summary
-
-### ⛔ Removed (Will Not Compile)
+`scan(source:)` checks a single source text, which is how the example app rescans as you type:
 
 ```swift
-// These will cause compile errors in iOS 26:
-
-UITableView                    → UICollectionView with list layout
-UIScreen.main                  → view.window?.windowScene?.screen
-NavigationView                 → NavigationStack / NavigationSplitView
-UINavigationBar.appearance()   → Per-instance UINavigationBarAppearance
-UIWebView                      → WKWebView
-UIAlertView                    → UIAlertController
-.navigationBarTitle()          → .navigationTitle()
-```
-
-### ⚠️ Deprecated (Warnings)
-
-```swift
-// These produce warnings - migrate before iOS 27:
-
-@StateObject                   → @State with @Observable
-@ObservedObject                → Direct observation
-@EnvironmentObject             → @Environment(Type.self)
-@Published                     → @Observable properties
-CADisplayLink                  → UIUpdateLink
-UIView.animate(withDuration:)  → UIView.animate(springDuration:)
-.sheet(isPresented:)           → .presentation(isPresented:style:)
-```
-
----
-
-## 💻 Code Examples
-
-### Before/After: Complete ViewModel
-
-```swift
-// ❌ iOS 25
-class ProductListViewModel: ObservableObject {
-    @Published var products: [Product] = []
-    @Published var isLoading = false
-    @Published var error: Error?
-    
-    func loadProducts() {
-        isLoading = true
-        ProductService.shared.fetchProducts { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let products):
-                    self?.products = products
-                case .failure(let error):
-                    self?.error = error
-                }
-            }
-        }
-    }
-}
-
-struct ProductListView: View {
-    @StateObject private var viewModel = ProductListViewModel()
-    
-    var body: some View {
-        NavigationView {
-            List(viewModel.products) { product in
-                ProductRow(product: product)
-            }
-            .navigationBarTitle("Products")
-        }
-        .onAppear { viewModel.loadProducts() }
-    }
-}
-
-// ✅ iOS 26
-@Observable
-@MainActor
-class ProductListViewModel {
-    var products: [Product] = []
-    var isLoading = false
-    var error: Error?
-    
-    func loadProducts() async {
-        isLoading = true
-        defer { isLoading = false }
-        
-        do {
-            products = try await ProductService.shared.fetchProducts()
-        } catch {
-            self.error = error
-        }
-    }
-}
-
-struct ProductListView: View {
-    @State private var viewModel = ProductListViewModel()
-    
-    var body: some View {
-        NavigationStack {
-            List(viewModel.products) { product in
-                ProductRow(product: product)
-                    .glassEffect(.subtle)
-            }
-            .navigationTitle("Products")
-        }
-        .task { await viewModel.loadProducts() }
+func findings(in source: String) -> [String] {
+    ProjectScanner().scan(source: source).findings.compactMap { finding in
+        guard let rule = finding.rule, let location = finding.location else { return nil }
+        return "\(location.line):\(location.column) \(rule.title): \(rule.replacement)"
     }
 }
 ```
 
-### Before/After: Network Layer
+### Adopt the scene life cycle
+
+The core of the move, from the example app's scene delegate: the window belongs to the window
+scene, and the URL that launched the app arrives in the connection options.
 
 ```swift
-// ❌ iOS 25
-class NetworkManager {
-    func fetch<T: Decodable>(
-        _ endpoint: Endpoint,
-        completion: @escaping (Result<T, NetworkError>) -> Void
-    ) {
-        URLSession.shared.dataTask(with: endpoint.request) { data, response, error in
-            if let error = error {
-                completion(.failure(.networkError(error)))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(.noData))
-                return
-            }
-            
-            do {
-                let decoded = try JSONDecoder().decode(T.self, from: data)
-                completion(.success(decoded))
-            } catch {
-                completion(.failure(.decodingError(error)))
-            }
-        }.resume()
-    }
-}
-
-// ✅ iOS 26
-actor NetworkManager {
-    func fetch<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T {
-        let (data, response) = try await URLSession.shared.data(for: endpoint.request)
-        
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200...299).contains(httpResponse.statusCode) else {
-            throw NetworkError.invalidResponse
-        }
-        
-        return try JSONDecoder().decode(T.self, from: data)
-    }
-}
+func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    guard let windowScene = scene as? UIWindowScene else { return }
+    let window = UIWindow(windowScene: windowScene)
+    window.rootViewController = LabTabBarController(model: model)
+    self.window = window
+    window.makeKeyAndVisible()
 ```
 
----
+## Demo
 
-## 📊 Migration Timeline
+[MigrationLab](Examples/MigrationLab) is a scene-based UIKit app with SwiftUI screens: a source
+editor with live findings, the rule catalog, Liquid Glass on a custom control, and what the
+window scene reports about itself. Open `Examples/MigrationLab/MigrationLab.xcodeproj` and run it
+on an iOS 26 simulator. `migrationlab://rule/<rule-id>` opens a rule.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                 RECOMMENDED MIGRATION TIMELINE                   │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Week 1-2:   🔍 Preparation                                     │
-│              • Run deprecation scanner                          │
-│              • Update dependencies                              │
-│              • Set up iOS 26 environment                        │
-│                                                                  │
-│  Week 3-4:   ⚡ Swift 6 Migration                                │
-│              • Fix concurrency warnings                         │
-│              • Add Sendable conformances                        │
-│              • Convert to async/await                           │
-│                                                                  │
-│  Week 5-6:   🧊 UI Migration                                    │
-│              • Adopt Liquid Glass                               │
-│              • Update navigation                                │
-│              • Migrate to @Observable                           │
-│                                                                  │
-│  Week 7-8:   🔧 Framework Updates                               │
-│              • StoreKit 2 migration                             │
-│              • App Intents adoption                             │
-│              • Other frameworks                                 │
-│                                                                  │
-│  Week 9-10:  🧪 Testing & Release                               │
-│              • Comprehensive testing                            │
-│              • Performance optimization                         │
-│              • App Store submission                             │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
-```
+| Scanner | Rules | Liquid Glass | Scene |
+| --- | --- | --- | --- |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/example-scanner-dark.png"><img src="docs/images/example-scanner-light.png" alt="The scanner screen with a legacy app delegate and its findings" width="200"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/example-rules-dark.png"><img src="docs/images/example-rules-light.png" alt="The searchable list of 42 rules" width="200"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/example-glass-dark.png"><img src="docs/images/example-glass-light.png" alt="Glass buttons in a glass effect container over a blue gradient" width="200"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/example-scene-dark.png"><img src="docs/images/example-scene-light.png" alt="The window scene's role, windows, orientation and display scale" width="200"></picture> |
 
----
+The screenshots come from the running app; `scripts/capture-example-screens.sh` takes them again.
 
-## 📋 Quick Checklist
+## Documentation
 
-```markdown
-## Pre-Migration
-- [ ] Run deprecation scanner
-- [ ] Update all dependencies
-- [ ] Create migration branch
-- [ ] Set up iOS 26 simulator
+Reference documentation and articles:
 
-## Swift 6 Migration
-- [ ] Enable strict concurrency checking
-- [ ] Fix all Sendable warnings
-- [ ] Add @MainActor to ViewModels
-- [ ] Convert completion handlers to async
+- [MigrationScanner on GitHub Pages](https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/) — the API reference
+- [Getting started](https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/gettingstarted)
+- [Rule reference](https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/rulereference) — all 42 rules with their fixes
 
-## UI Migration
-- [ ] Replace NavigationView with NavigationStack
-- [ ] Migrate to @Observable
-- [ ] Update to @Environment injection
-- [ ] Apply Liquid Glass effects
+## Guides
 
-## Testing
-- [ ] Run all unit tests
-- [ ] Run UI tests on iOS 26 simulator
-- [ ] Test on physical device
-- [ ] Performance benchmarking
+- [Adopting the scene life cycle](https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/adoptingthescenelifecycle) — manifest, scene delegate, moved methods and replacements for `UIScreen.main`
+- [Adopting Liquid Glass](https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/adoptingliquidglass) — stop opting out, remove custom backgrounds, renamed APIs, glass on custom controls
+- [Running in Xcode and CI](https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/runninginxcodeandci) — build phase, pull request annotations, code scanning, JSON
 
-## Release
-- [ ] Update screenshots
-- [ ] Update App Store description
-- [ ] TestFlight beta
-- [ ] Submit for review
-```
+## Requirements
 
----
+| Platform | Minimum version |
+| --- | --- |
+| macOS (command line) | 14 |
+| iOS (library) | 17 |
+| Example app | iOS 26 |
+| Toolchain | Swift 6.2 (Xcode 26) |
 
-## 🤝 Contributing
+## Architecture
 
-Contributions are welcome! This guide is maintained by the community for the community.
+- `Lexer` turns a Swift file into tokens and comments; string contents and comments never become
+  tokens, interpolated code does.
+- `BracketIndex` and `TokenIndex` index identifiers, bracket pairs, argument labels and closure
+  parameters in one pass, so every matcher is linear in the size of the file.
+- `RuleCatalog` holds the rules; each has a matcher (token sequence, member access, call or
+  declaration with argument labels, or a project check), a severity and its SDK evidence.
+- `ProjectFacts` collects app entry points, Info.plist values and build settings for the project
+  rules. `PropertyListGuard` refuses property lists that are deeply nested, cyclic or malformed
+  before the system parser reads them.
+- `ProjectScanner` walks the files with size and count limits and never follows symbolic links;
+  `ReportFormatter` writes the five formats and escapes control characters in paths.
+- `MigrationScanCLI` parses and validates the command line; the `migration-scan` executable only
+  forwards to it.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-tip`)
-3. Commit your changes (`git commit -m 'Add amazing migration tip'`)
-4. Push to the branch (`git push origin feature/amazing-tip`)
-5. Open a Pull Request
+### Known limitations
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+- The scanner reads source text; it does not type-check. A rule such as `uiapplication-key-window`
+  matches `UIApplication.shared.keyWindow`, not a `keyWindow` reached through another variable.
+- Project rules assume one app per scanned folder: Info.plist files and build settings anywhere
+  in the folder count for the app found there.
+- It suggests replacements and never rewrites code.
 
----
+## Roadmap
 
-## 📜 License
+New rules follow new SDK releases; each one is added with the SDK declaration it is based on and
+a sample it must report and one it must leave alone. Requests and reports go to
+[issues](https://github.com/muhittincamdali/iOS26-Migration-Guide/issues).
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Contributing
 
----
+Contributions are welcome. Read the [contributing guide](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md) before opening a pull request. Report security issues privately as described in the [security policy](SECURITY.md).
 
-## 🌟 Star History
+## License
 
-<a href="https://star-history.com/#muhittincamdali/iOS26-Migration-Guide&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=muhittincamdali/iOS26-Migration-Guide&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=muhittincamdali/iOS26-Migration-Guide&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=muhittincamdali/iOS26-Migration-Guide&type=Date" />
- </picture>
-</a>
-
----
-
-<div align="center">
-
-**Found this guide helpful? Give it a ⭐ to help others find it!**
-
-<br/>
-
-Made with ❤️ by [Muhittin Camdali](https://github.com/muhittincamdali)
-
-[⬆ Back to top](#-ios-26-migration-guide)
-
-</div>
+Released under the MIT license. See [LICENSE](LICENSE).

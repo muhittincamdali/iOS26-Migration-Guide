@@ -1,47 +1,48 @@
-# Security Policy
+# Security policy
 
-## Reporting Security Issues
+## Supported versions
 
-If you discover a security vulnerability in this documentation that could lead to insecure implementations, please report it responsibly.
+Security fixes go into the latest release of `migration-scan` and the `MigrationScanner` library.
 
-### How to Report
+## Reporting a vulnerability
 
-1. **DO NOT** create a public issue for security vulnerabilities
-2. Use GitHub's private vulnerability reporting feature
-3. Or contact the maintainer directly
+Report a vulnerability privately through
+[GitHub's private vulnerability reporting](https://github.com/muhittincamdali/iOS26-Migration-Guide/security/advisories/new),
+not in a public issue. Include the scanner version (`migration-scan --version`), the command line
+and, if you can, a file that triggers the problem. You get an answer within a week.
 
-### What to Report
+## What the scanner is designed to withstand
 
-- Code examples with security flaws
-- Guidance that leads to insecure implementations
-- Links to compromised resources
-- Exposed credentials or sensitive data
+The scanner reads files it did not write: sources, property lists and project files from any
+repository, including pull requests from strangers. These are the properties it keeps, and a
+report that breaks one of them is a vulnerability:
 
-### Response Time
+- **It only reads.** No rule changes a file, runs code from the project, or makes a network
+  request.
+- **Reports contain no source text.** A finding has a rule, a path and a position; explanations
+  come from the rule catalog. A secret in a scanned file does not reach any report format.
+- **Paths cannot forge output.** Control characters, line and paragraph separators,
+  bidirectional formatting characters and the byte order mark in a path are written as
+  `\u{…}`; GitHub workflow commands are escaped as `@actions/core` does.
+- **Bounded work.** Files are read with a size cap (4 MiB by default), the walk stops at a file
+  count, symbolic links inside a folder are not followed, and lexing and matching are linear in
+  the size of a file, also for nested or unclosed brackets.
+- **No crash on hostile property lists.** Property lists nested deeper than 64 levels, binary
+  property lists with cycles or offsets outside the file, and the OpenStep format are refused
+  before `PropertyListSerialization` reads them. The binary check expands each distinct object
+  offset once, so objects that share an offset cost no more than one, and a binary property list
+  whose containers hold more references than the file has bytes (containers that overlap) is
+  refused, which keeps the check linear in the size of the file. XML depth is counted in one pass that reads
+  markup as the system parser does, and markup the two could read differently refuses the file:
+  a `<` inside a tag or a DOCTYPE, a `>` inside a quoted DOCTYPE literal, a DOCTYPE internal
+  subset (and with it any entity declaration), a DOCTYPE after the root element, `<` or `>`
+  inside a processing instruction, an encoding other than UTF-8, US-ASCII or ISO-8859-1, a 0x00
+  byte (UTF-16 and UTF-32 text, which needs neither a declaration nor a byte-order mark), any
+  other `<!` declaration, and a closing tag without a matching opening tag. Comments and CDATA
+  sections in content are skipped as text. A refused Info.plist is reported as an
+  `invalid-property-list` notice.
+- **No trap on hostile numbers.** Command-line numbers that do not fit an `Int` are rejected, and
+  64-bit fields in binary property lists are compared with the file size before conversion.
 
-- **Acknowledgment**: Within 48 hours
-- **Assessment**: Within 5 days
-- **Fix**: As soon as possible
-
-## Scope
-
-This policy covers:
-- All code examples in the repository
-- Documentation that could affect app security
-- External links and resources
-
-## Security Best Practices
-
-When contributing, ensure:
-- No hardcoded credentials
-- No insecure API examples
-- Privacy-respecting code patterns
-- Up-to-date security practices
-
-## Supported Versions
-
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest  | :white_check_mark: |
-
-Thank you for keeping the iOS community secure!
+Out of scope: findings that are wrong or missing (open an issue), and the security of the apps
+that are scanned.

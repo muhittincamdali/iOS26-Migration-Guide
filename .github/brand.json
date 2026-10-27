@@ -1,0 +1,43 @@
+{
+  "name": "iOS 26 Migration Guide",
+  "repository": "muhittincamdali/iOS26-Migration-Guide",
+  "tagline": {
+    "en": "Find what the iOS 26 and iOS 27 SDKs deprecate or refuse in your app, and fix it step by step."
+  },
+  "tags": {
+    "en": [
+      "Swift 6",
+      "Scene life cycle",
+      "Liquid Glass",
+      "42 rules"
+    ]
+  },
+  "motif": "code",
+  "buttons": [
+    "start",
+    "docs",
+    "examples"
+  ],
+  "links": {
+    "docs": "https://muhittincamdali.github.io/iOS26-Migration-Guide/documentation/migrationscanner/",
+    "examples": "Examples/"
+  },
+  "languages": [
+    "en",
+    "tr",
+    "zh-CN",
+    "ja",
+    "ko",
+    "es",
+    "de",
+    "fr",
+    "pt-BR",
+    "ru"
+  ],
+  "docc": {
+    "targets": [
+      "MigrationScanner"
+    ]
+  },
+  "socialTheme": "dark"
+}

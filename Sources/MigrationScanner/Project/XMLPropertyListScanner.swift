@@ -13,6 +13,9 @@
 ///   for example, `+ADw-` is a `<`.
 /// - Comments and CDATA sections end at their first `-->` and `]]>`; markup inside them is text.
 /// - Any other `<!` is refused, and so is a closing `array` or `dict` tag with no opening one.
+/// - A 0x00 byte is refused. It never appears in UTF-8 XML, but every ASCII character in UTF-16
+///   and UTF-32 carries one, and those files need no byte-order mark: `<\0a\0r\0r\0a\0y\0>\0`
+///   is an `array` tag the parser may read and this byte-level count does not.
 ///
 /// Every check is linear in the size of the file.
 struct XMLPropertyListScanner {
@@ -34,6 +37,7 @@ struct XMLPropertyListScanner {
     }
 
     private mutating func scan(limit: Int) -> Bool {
+        guard !bytes.contains(Self.null) else { return false }
         if bytes.starts(with: Self.utf8ByteOrderMark) { index = Self.utf8ByteOrderMark.count }
         while index < bytes.count, Self.whitespace.contains(bytes[index]) { index += 1 }
         guard index < bytes.count, bytes[index] == Self.lessThan else { return false }
@@ -162,6 +166,7 @@ struct XMLPropertyListScanner {
     private static let utf8ByteOrderMark: [UInt8] = [0xEF, 0xBB, 0xBF]
     private static let whitespace: [UInt8] = [0x20, 0x09, 0x0A, 0x0D]
     private static let quotes: [UInt8] = [UInt8(ascii: "\""), UInt8(ascii: "'")]
+    private static let null: UInt8 = 0x00
     private static let lessThan = UInt8(ascii: "<")
     private static let greaterThan = UInt8(ascii: ">")
     private static let slash = UInt8(ascii: "/")

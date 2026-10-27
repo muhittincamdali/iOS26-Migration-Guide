@@ -210,6 +210,27 @@ struct PropertyListGuardTests {
         }
     }
 
+    /// UTF-16 and UTF-32 put a 0x00 byte next to every ASCII character, so a byte-level count
+    /// read `<\0a\0r\0r\0a\0y\0>` as a tag named `\0a\0r...` and never counted the nesting. The
+    /// variants without a byte-order mark used to pass the guard.
+    @Test("UTF-16 and UTF-32 property lists are refused, with or without a byte-order mark", arguments: [
+        String.Encoding.utf16LittleEndian, .utf16BigEndian, .utf16, .utf32, .utf32LittleEndian, .utf32BigEndian
+    ])
+    func wideEncodings(encoding: String.Encoding) throws {
+        let document = "<?xml version=\"1.0\"?>\n<plist version=\"1.0\">" + nestedArrays(nestingPastTheGuard) + "</plist>\n"
+        let data = try #require(document.data(using: encoding))
+        #expect(!PropertyListGuard.isSafeToParse(data))
+        let bare = try #require(nestedArrays(nestingPastTheGuard).data(using: encoding))
+        #expect(!PropertyListGuard.isSafeToParse(bare))
+    }
+
+    @Test("A NUL byte anywhere in an XML property list is refused")
+    func nulBytes() {
+        #expect(PropertyListGuard.isSafeToParse(Data("<plist><true/></plist>".utf8)))
+        #expect(!PropertyListGuard.isSafeToParse(Data("<plist><true/>\0</plist>".utf8)))
+        #expect(!PropertyListGuard.isSafeToParse(Data("<plist><\0array></array></plist>".utf8)))
+    }
+
     @Test("DOCTYPE subsets, misplaced declarations and markup inside processing instructions are refused", arguments: [
         "<!DOCTYPE plist [ <!ELEMENT plist ANY> ]><plist><true/></plist>",
         "<!DOCTYPE plist SYSTEM \"a>b\"><plist><true/></plist>",

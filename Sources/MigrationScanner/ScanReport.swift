@@ -37,7 +37,9 @@ public struct Notice: Sendable, Hashable, Codable, Comparable {
         case unreadable
         /// ``ScanConfiguration/maximumFileCount`` files were scanned; the rest were not.
         case fileLimitReached = "file-limit-reached"
-        /// A file named like an Info.plist is not a property list.
+        /// A file named like an Info.plist is not a property list, or is one that the property list
+        /// guard refuses to parse: nested too deep, or using XML markup or an encoding that the
+        /// guard could read differently from the system parser.
         case invalidPropertyList = "invalid-property-list"
         /// A `migration-scan:` comment has an unknown command, no rule, or a rule that does not exist.
         case invalidDirective = "invalid-directive"
@@ -59,7 +61,7 @@ public struct Notice: Sendable, Hashable, Codable, Comparable {
         case .fileTooLarge: "Skipped: the file is larger than the maximum file size."
         case .unreadable: "Skipped: the path does not exist or cannot be read."
         case .fileLimitReached: "Stopped: the maximum number of files was reached; later files were not scanned."
-        case .invalidPropertyList: "Skipped: the file is not a valid property list."
+        case .invalidPropertyList: "Skipped: the file is not a valid property list, or it uses nesting, XML markup or an encoding that the scanner refuses to parse."
         case .invalidDirective: "Ignored: the migration-scan comment has an unknown command, names no rule, or names a rule that does not exist."
         }
     }

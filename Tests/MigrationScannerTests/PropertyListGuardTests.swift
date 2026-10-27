@@ -264,6 +264,6 @@ struct PropertyListGuardTests {
         try project.write("App/Info.plist", Data(document.utf8))
         let notices = project.scan().notices
         #expect(notices.map(\.kind) == [.invalidPropertyList])
-        #expect(notices.first?.message.contains("not a valid property list") == true)
+        #expect(notices.first?.message.contains("refuses to parse") == true)
     }
 }

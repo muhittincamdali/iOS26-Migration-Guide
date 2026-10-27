@@ -7,6 +7,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-10-27
+
 The repository becomes a tool with guides instead of a collection of guide pages.
 
 ### Added
@@ -46,5 +48,6 @@ The repository becomes a tool with guides instead of a collection of guide pages
 
 - Markdown migration guide for iOS 26 with Liquid Glass, Swift 6 and framework pages.
 
-[Unreleased]: https://github.com/muhittincamdali/iOS26-Migration-Guide/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/muhittincamdali/iOS26-Migration-Guide/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/muhittincamdali/iOS26-Migration-Guide/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/muhittincamdali/iOS26-Migration-Guide/releases/tag/v1.0.0

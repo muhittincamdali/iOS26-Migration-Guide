@@ -29,7 +29,9 @@ report that breaks one of them is a vulnerability:
   the size of a file, also for nested or unclosed brackets.
 - **No crash on hostile property lists.** Property lists nested deeper than 64 levels, binary
   property lists with cycles or offsets outside the file, XML with entity declarations and the
-  OpenStep format are refused before `PropertyListSerialization` reads them.
+  OpenStep format are refused before `PropertyListSerialization` reads them. XML depth is counted
+  outside comments, CDATA sections and processing instructions, and a closing tag without a
+  matching opening tag refuses the file.
 - **No trap on hostile numbers.** Command-line numbers that do not fit an `Int` are rejected, and
   64-bit fields in binary property lists are compared with the file size before conversion.
 

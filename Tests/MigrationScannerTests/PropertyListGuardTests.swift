@@ -126,6 +126,31 @@ struct PropertyListGuardTests {
         #expect(!PropertyListGuard.isSafeToParse(Data("{ UIDesignRequiresCompatibility = YES; }".utf8)))
     }
 
+    /// Closing tags hidden in a section that is not markup must not pay for nesting deeper than
+    /// the limit afterwards.
+    @Test("Closing tags inside comments, CDATA and processing instructions do not lower the depth", arguments: [
+        ("<!--", "-->"),
+        ("<plist><string><![CDATA[", "]]></string></plist>"),
+        ("<?pi ", "?>")
+    ])
+    func hiddenClosingTags(opening: String, closing: String) {
+        let extra = 1_000
+        let hidden = opening + String(repeating: "</array>", count: extra) + closing
+        let nested = String(repeating: "<array>", count: PropertyListGuard.maximumDepth + extra)
+            + String(repeating: "</array>", count: PropertyListGuard.maximumDepth + extra)
+        let document = "<?xml version=\"1.0\"?>" + hidden + "<plist>" + nested + "</plist>"
+        #expect(!PropertyListGuard.isSafeToParse(Data(document.utf8)))
+    }
+
+    @Test("Markup inside comments and CDATA is ignored, and an unmatched closing tag is refused")
+    func sectionsAndUnmatchedClosing() {
+        let opened = String(repeating: "<array>", count: PropertyListGuard.maximumDepth * 2)
+        let commented = "<plist><!--" + opened + "--><![CDATA[" + opened + "]]><array/></plist>"
+        #expect(PropertyListGuard.isSafeToParse(Data(commented.utf8)))
+        #expect(!PropertyListGuard.isSafeToParse(Data("<plist></array><array></array></plist>".utf8)))
+        #expect(!PropertyListGuard.isSafeToParse(Data("<plist><!-- never closed <array></plist>".utf8)))
+    }
+
     @Test("A deep Info.plist in a project becomes a notice, not a crash")
     func deepInfoPlistInProject() throws {
         let project = try TemporaryDirectory()

@@ -128,8 +128,10 @@ private struct BinaryPropertyList {
             count = Self.integer(bytes, at: position + 1, size: width)
             position += 1 + width
         }
+        // Compare before multiplying: a dictionary count near UInt64.max would overflow `count * 2`.
+        let available = UInt64(offsetTableStart - position) / UInt64(referenceSize)
+        guard count <= available, kind != 0xD || count <= available / 2 else { return nil }
         let references = kind == 0xD ? count * 2 : count
-        guard references <= UInt64(offsetTableStart - position) / UInt64(referenceSize) else { return nil }
         var result: [Int] = []
         result.reserveCapacity(Int(references))
         for index in 0..<Int(references) {

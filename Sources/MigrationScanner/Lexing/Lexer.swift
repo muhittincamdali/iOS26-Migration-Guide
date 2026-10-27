@@ -155,8 +155,12 @@ struct Lexer {
             emit(.string, "", at: start)
             stack.append(.regex(hashes: hashes))
         default:
-            advance()
-            emit(.punctuation, "#", at: start)
+            // `#if`, `#selector`, or a run of hashes that starts no literal: emit the whole run at
+            // once, so a long run is not counted again from each of its positions.
+            for _ in 0..<hashes {
+                emit(.punctuation, "#", at: location)
+                advance()
+            }
         }
     }
 

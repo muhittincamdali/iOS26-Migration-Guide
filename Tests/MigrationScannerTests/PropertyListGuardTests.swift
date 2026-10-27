@@ -98,6 +98,22 @@ struct PropertyListGuardTests {
         #expect(!PropertyListGuard.isSafeToParse(Data(data)))
     }
 
+    @Test("A dictionary count near UInt64.max is refused without overflowing")
+    func hugeDictionaryCount() {
+        // Object 0 at offset 8: a dictionary whose count is the 8-byte integer 0xFFFF_FFFF_FFFF_FFFF.
+        // Object 1 at offset 18: true. The offset table follows at 19. Doubling the count for the
+        // keys and values would overflow UInt64.
+        var bytes = Array("bplist00".utf8)
+        bytes += [0xDF, 0x13] + [UInt8](repeating: 0xFF, count: 8)
+        bytes += [0x09]
+        bytes += [0, 0, 0, 8, 0, 0, 0, 18]
+        bytes += [0, 0, 0, 0, 0, 0, 4, 2]
+        bytes += withUnsafeBytes(of: UInt64(2).bigEndian, Array.init)
+        bytes += withUnsafeBytes(of: UInt64(0).bigEndian, Array.init)
+        bytes += withUnsafeBytes(of: UInt64(19).bigEndian, Array.init)
+        #expect(!PropertyListGuard.isSafeToParse(Data(bytes)))
+    }
+
     @Test("Deep XML nesting, entity declarations and other text formats are refused")
     func xml() {
         let deep = "<?xml version=\"1.0\"?><plist><array>" + String(repeating: "<array>", count: 10_000)

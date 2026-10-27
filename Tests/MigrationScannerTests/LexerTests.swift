@@ -81,6 +81,15 @@ struct LexerTests {
         #expect(comments.map(\.line) == [1, 2])
     }
 
+    @Test("Long runs of hashes and raw-string delimiters are lexed in linear time", .timeLimit(.minutes(1)))
+    func hashRuns() {
+        let hashes = String(repeating: "#", count: 300_000) + " let a = 1"
+        #expect(identifiers(hashes) == ["let", "a"])
+        let delimiter = String(repeating: "#", count: 2_000)
+        let raw = "let s = \(delimiter)\"" + String(repeating: "\"" + String(delimiter.dropLast()), count: 200) + "\"\(delimiter); let b = 2"
+        #expect(identifiers(raw) == ["let", "s", "let", "b"])
+    }
+
     @Test("Deep nesting of comments and interpolations is linear and does not recurse")
     func deepNesting() {
         let comment = String(repeating: "/*", count: 50_000) + String(repeating: "*/", count: 50_000) + " let a = 1"

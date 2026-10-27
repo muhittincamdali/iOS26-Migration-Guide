@@ -132,17 +132,23 @@ struct PropertyListGuardTests {
         #expect(!PropertyListGuard.isSafeToParse(binaryPropertyList([[1], [0]])))
     }
 
-    @Test("Objects that share an offset are expanded once", .timeLimit(.minutes(1)))
+    @Test("Objects that share an offset pass and parse as the guard measures them")
     func sharedOffsets() throws {
-        let small = sharedOffsetPropertyList(sharing: 3, references: 4)
-        #expect(PropertyListGuard.isSafeToParse(small))
-        #expect(try parsedDepth(small) == 2)
+        let data = sharedOffsetPropertyList(sharing: 3, references: 4)
+        #expect(PropertyListGuard.isSafeToParse(data))
+        #expect(try parsedDepth(data) == 2)
+    }
+
+    /// The bound is wide because the tests run in parallel on shared CI machines: expanding each
+    /// object on its own took 34 seconds here in a debug build, expanding each offset once 0.04.
+    @Test("Objects that share an offset are expanded once")
+    func sharedOffsetsAreExpandedOnce() {
         // 100 million steps if each object were expanded on its own; 20,000 once per offset.
-        let large = sharedOffsetPropertyList(sharing: 10_000, references: 10_000)
+        let data = sharedOffsetPropertyList(sharing: 10_000, references: 10_000)
         var isSafe = false
-        let duration = ContinuousClock().measure { isSafe = PropertyListGuard.isSafeToParse(large) }
+        let duration = ContinuousClock().measure { isSafe = PropertyListGuard.isSafeToParse(data) }
         #expect(isSafe)
-        #expect(duration < .seconds(1))
+        #expect(duration < .seconds(10))
     }
 
     @Test("A cycle through a shared offset is refused")

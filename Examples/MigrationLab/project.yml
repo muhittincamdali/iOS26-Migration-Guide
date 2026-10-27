@@ -1,0 +1,54 @@
+# XcodeGen spec for MigrationLab.xcodeproj. The project file is committed, so XcodeGen is only
+# needed after changing this file: run `xcodegen` in this folder.
+name: MigrationLab
+options:
+  bundleIdPrefix: io.github.muhittincamdali
+  deploymentTarget:
+    iOS: "26.0"
+packages:
+  MigrationScanner:
+    path: ../..
+targets:
+  MigrationLab:
+    type: application
+    supportedDestinations: [iOS]
+    sources: [MigrationLab]
+    dependencies:
+      - package: MigrationScanner
+        product: MigrationScanner
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        MARKETING_VERSION: "2.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_FILE: MigrationLab/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Migration Lab
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+  MigrationLabUITests:
+    type: bundle.ui-testing
+    supportedDestinations: [iOS]
+    sources: [MigrationLabUITests]
+    dependencies:
+      - target: MigrationLab
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: MigrationLab
+schemes:
+  MigrationLab:
+    build:
+      targets:
+        MigrationLab: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - MigrationLabUITests

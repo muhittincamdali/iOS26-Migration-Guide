@@ -91,7 +91,7 @@ Files larger than 4 MiB are skipped with a notice (`--max-file-size`), and the s
 100,000 files (`--max-files`). Symbolic links inside a scanned folder are not followed. An
 Info.plist that is not a property list, is nested more than 64 levels deep, or uses XML that the
 scanner could read differently from the system parser (a DOCTYPE internal subset, markup inside a
-tag, an encoding other than UTF-8, US-ASCII or ISO-8859-1) is skipped with an
+tag, an encoding other than UTF-8, US-ASCII or ISO-8859-1, UTF-16 or UTF-32 text) is skipped with an
 `invalid-property-list` notice, and the project rules do not use its values. Paths are
 the only text in a report that does not come from the rule catalog; control characters and
 bidirectional formatting characters in them are written as `\u{…}`, so a file name cannot add

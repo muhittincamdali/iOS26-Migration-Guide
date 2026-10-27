@@ -35,6 +35,41 @@ private func chain(_ count: Int) -> [[Int]?] {
     (0..<count).map { [$0 + 1] } + [nil]
 }
 
+/// Ends a hand-written `bplist00` body with an offset table that may point several objects at the
+/// same offset. References are 2 bytes, offsets 4 bytes, and object 0 is the top object.
+private func binaryPropertyList(body: [UInt8], offsets: [Int]) -> Data {
+    var bytes = body
+    let tableOffset = bytes.count
+    for offset in offsets { bytes += withUnsafeBytes(of: UInt32(offset).bigEndian, Array.init) }
+    var trailer: [UInt8] = [0, 0, 0, 0, 0, 0, 4, 2]
+    trailer += withUnsafeBytes(of: UInt64(offsets.count).bigEndian, Array.init)
+    trailer += withUnsafeBytes(of: UInt64(0).bigEndian, Array.init)
+    trailer += withUnsafeBytes(of: UInt64(tableOffset).bigEndian, Array.init)
+    return Data(bytes + trailer)
+}
+
+/// The marker of an array of `count` objects, its count written as a 2-byte integer.
+private func arrayMarker(_ count: Int) -> [UInt8] {
+    [0xAF, 0x11, UInt8(count >> 8), UInt8(count & 0xFF)]
+}
+
+/// The top array refers to `sharing` objects that all start at one offset: an array of
+/// `references` references to one `true`. Expanding each of those objects on its own takes
+/// `sharing × references` steps.
+private func sharedOffsetPropertyList(sharing: Int, references: Int) -> Data {
+    let leaf = sharing + 1
+    var body = Array("bplist00".utf8)
+    let top = body.count
+    body += arrayMarker(sharing)
+    for object in 1...sharing { body += [UInt8(object >> 8), UInt8(object & 0xFF)] }
+    let shared = body.count
+    body += arrayMarker(references)
+    for _ in 0..<references { body += [UInt8(leaf >> 8), UInt8(leaf & 0xFF)] }
+    let leafOffset = body.count
+    body.append(0x09)
+    return binaryPropertyList(body: body, offsets: [top] + Array(repeating: shared, count: sharing) + [leafOffset])
+}
+
 /// `count` nested XML arrays.
 private func nestedArrays(_ count: Int) -> String {
     String(repeating: "<array>", count: count) + String(repeating: "</array>", count: count)
@@ -95,6 +130,47 @@ struct PropertyListGuardTests {
     @Test("A reference cycle is refused")
     func cycle() {
         #expect(!PropertyListGuard.isSafeToParse(binaryPropertyList([[1], [0]])))
+    }
+
+    @Test("Objects that share an offset are expanded once", .timeLimit(.minutes(1)))
+    func sharedOffsets() throws {
+        let small = sharedOffsetPropertyList(sharing: 3, references: 4)
+        #expect(PropertyListGuard.isSafeToParse(small))
+        #expect(try parsedDepth(small) == 2)
+        // 100 million steps if each object were expanded on its own; 20,000 once per offset.
+        let large = sharedOffsetPropertyList(sharing: 10_000, references: 10_000)
+        var isSafe = false
+        let duration = ContinuousClock().measure { isSafe = PropertyListGuard.isSafeToParse(large) }
+        #expect(isSafe)
+        #expect(duration < .seconds(1))
+    }
+
+    @Test("A cycle through a shared offset is refused")
+    func sharedOffsetCycle() {
+        // Objects 0 and 2 both start at the array [1]; object 1 is the array [2].
+        var body = Array("bplist00".utf8)
+        body += [0xA1, 0x00, 0x01, 0xA1, 0x00, 0x02]
+        #expect(!PropertyListGuard.isSafeToParse(binaryPropertyList(body: body, offsets: [8, 11, 8])))
+    }
+
+    @Test("Containers whose references overlap other containers are refused")
+    func overlappingContainers() {
+        // Each 4-byte unit starts an array of 256 references, read from the units after it as the
+        // references 0xAF11 and 256, which both point at one `true`. The 200 arrays the top array
+        // refers to hold 51,200 references in under 2 KB: more references than the file has bytes.
+        let units = 200
+        let unit = arrayMarker(256)
+        var body = Array("bplist00".utf8)
+        body += arrayMarker(units)
+        for object in 1...units { body += [UInt8(object >> 8), UInt8(object & 0xFF)] }
+        let firstUnit = body.count
+        for _ in 0..<(units + 128) { body += unit }
+        let leaf = body.count
+        body.append(0x09)
+        var offsets = [Int](repeating: leaf, count: 0xAF11 + 1)
+        offsets[0] = 8
+        for object in 1...units { offsets[object] = firstUnit + (object - 1) * unit.count }
+        #expect(!PropertyListGuard.isSafeToParse(binaryPropertyList(body: body, offsets: offsets)))
     }
 
     @Test("Trailers that point outside the file are refused without trapping", arguments: [

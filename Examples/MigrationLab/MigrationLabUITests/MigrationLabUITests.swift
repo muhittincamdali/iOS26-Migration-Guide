@@ -1,6 +1,7 @@
 import XCTest
 
 /// Runs the example app the way a person does: through its scene, its tabs and a URL.
+@MainActor
 final class MigrationLabUITests: XCTestCase {
     private let timeout: TimeInterval = 10
 

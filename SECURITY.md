@@ -33,7 +33,8 @@ report that breaks one of them is a vulnerability:
   markup as the system parser does, and markup the two could read differently refuses the file:
   a `<` inside a tag or a DOCTYPE, a `>` inside a quoted DOCTYPE literal, a DOCTYPE internal
   subset (and with it any entity declaration), a DOCTYPE after the root element, `<` or `>`
-  inside a processing instruction, an encoding other than UTF-8, US-ASCII or ISO-8859-1, any
+  inside a processing instruction, an encoding other than UTF-8, US-ASCII or ISO-8859-1, a 0x00
+  byte (UTF-16 and UTF-32 text, which needs neither a declaration nor a byte-order mark), any
   other `<!` declaration, and a closing tag without a matching opening tag. Comments and CDATA
   sections in content are skipped as text. A refused Info.plist is reported as an
   `invalid-property-list` notice.

@@ -8,13 +8,16 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
-        .library(name: "MigrationScanner", targets: ["MigrationScanner"])
+        .library(name: "MigrationScanner", targets: ["MigrationScanner"]),
+        .executable(name: "migration-scan", targets: ["migration-scan"])
     ],
     targets: [
         .target(name: "MigrationScanner"),
+        .target(name: "MigrationScanCLI", dependencies: ["MigrationScanner"]),
+        .executableTarget(name: "migration-scan", dependencies: ["MigrationScanCLI"]),
         .testTarget(
             name: "MigrationScannerTests",
-            dependencies: ["MigrationScanner"],
+            dependencies: ["MigrationScanner", "MigrationScanCLI"],
             resources: [.copy("Fixtures")]
         )
     ]

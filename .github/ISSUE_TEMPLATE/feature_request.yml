@@ -1,62 +1,29 @@
-name: Feature Request
-description: Suggest an idea for this project
-title: "[Feature]: "
+name: Rule request
+description: Suggest a deprecation, removal or SDK requirement the scanner should report.
 labels: ["enhancement"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for suggesting a feature! Please fill out the information below.
-
-  - type: textarea
-    id: problem
-    attributes:
-      label: Problem Statement
-      description: Is your feature request related to a problem? Please describe.
-      placeholder: A clear and concise description of what the problem is.
-    validations:
-      required: true
-
-  - type: textarea
-    id: solution
-    attributes:
-      label: Proposed Solution
-      description: Describe the solution you'd like
-      placeholder: A clear and concise description of what you want to happen.
-    validations:
-      required: true
-
-  - type: textarea
+  - type: input
     id: api
     attributes:
-      label: Proposed API
-      description: If applicable, show how you envision the API
-      render: swift
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternatives Considered
-      description: Describe any alternative solutions or features you've considered.
-
-  - type: dropdown
-    id: category
-    attributes:
-      label: Category
-      options:
-        - Navigation Pattern
-        - Deep Linking
-        - State Management
-        - Animation/Transition
-        - API Improvement
-        - Documentation
-        - Other
+      label: API or setting
+      description: For example `UIApplication.shared.windows` or `INFOPLIST_KEY_UIDesignRequiresCompatibility`.
     validations:
       required: true
-
-  - type: checkboxes
-    id: contribution
+  - type: textarea
+    id: source
     attributes:
-      label: Contribution
-      options:
-        - label: I would be willing to submit a PR for this feature
+      label: Where Apple says so
+      description: The SDK header or Swift interface declaration with its deprecation, or a link to Apple's documentation.
+    validations:
+      required: true
+  - type: textarea
+    id: replacement
+    attributes:
+      label: Replacement
+      description: What code should use instead.
+  - type: textarea
+    id: samples
+    attributes:
+      label: Samples
+      description: Code the rule must report, and similar code it must leave alone.
+      render: swift

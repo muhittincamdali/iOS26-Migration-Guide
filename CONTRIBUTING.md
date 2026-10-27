@@ -1,80 +1,56 @@
-# Contributing to SwiftRouter
+# Contributing
 
-First off, thank you for considering contributing to SwiftRouter! It's people like you that make SwiftRouter such a great tool.
+Thank you for helping. Bug reports, wrong or missing findings, new rules and documentation fixes
+are all welcome.
 
-## Code of Conduct
+## Report a wrong or missing finding
 
-This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code.
+Open an issue with the smallest Swift code, Info.plist or build setting that shows it, the
+finding you got or expected, and `migration-scan --version`. Do not paste private code: reduce it
+to the API call that matters.
 
-## How Can I Contribute?
+## Add or change a rule
 
-### Reporting Bugs
+Every rule must be traceable to Apple's SDK or documentation:
 
-Before creating bug reports, please check the existing issues as you might find out that you don't need to create one. When you are creating a bug report, please include as many details as possible:
+1. Find the declaration in the current SDK headers or Swift interfaces (for example
+   `UIApplication.h` or `SwiftUI.swiftinterface`) and note its deprecation version and message.
+   A rule based on memory, a blog post or a beta that changed later is not accepted.
+2. Add the rule to the right file in `Sources/MigrationScanner/Rules/`, with the declaration in
+   `evidence` and Apple's page for the replacement in `documentation`.
+3. Add a sample it must report and one it must ignore to `Tests/MigrationScannerTests/RuleSampleTests.swift`.
+   The test suite fails until every rule has both.
+4. Regenerate the rule reference:
 
-- **Use a clear and descriptive title**
-- **Describe the exact steps which reproduce the problem**
-- **Provide specific examples to demonstrate the steps**
-- **Describe the behavior you observed after following the steps**
-- **Explain which behavior you expected to see instead and why**
-- **Include Swift version and OS version**
+   ```sh
+   swift run migration-scan --list-rules --format json | node scripts/rule-catalog.mjs
+   ```
 
-### Suggesting Enhancements
+## Development
 
-Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, please include:
-
-- **Use a clear and descriptive title**
-- **Provide a step-by-step description of the suggested enhancement**
-- **Provide specific examples to demonstrate the steps**
-- **Describe the current behavior and explain which behavior you expected to see instead**
-- **Explain why this enhancement would be useful**
-
-### Pull Requests
-
-1. Fork the repo and create your branch from `main`
-2. If you've added code that should be tested, add tests
-3. If you've changed APIs, update the documentation
-4. Ensure the test suite passes
-5. Make sure your code follows the existing style (SwiftLint)
-6. Issue that pull request!
-
-## Development Setup
-
-```bash
-# Clone your fork
-git clone https://github.com/YOUR_USERNAME/SwiftRouter.git
-
-# Navigate to the project
-cd SwiftRouter
-
-# Open in Xcode
-open Package.swift
-
-# Run tests
+```sh
+swift build
 swift test
 ```
 
-## Style Guide
+Before opening a pull request, also check that the example app builds and passes its UI tests,
+and that it still has no findings of its own:
 
-- Follow [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
-- Use SwiftLint for code style consistency
-- Write meaningful commit messages following [Conventional Commits](https://www.conventionalcommits.org/)
-- Document public APIs with DocC-compatible comments
+```sh
+swift run migration-scan Examples --fail-on info
+xcodebuild test -project Examples/MigrationLab/MigrationLab.xcodeproj -scheme MigrationLab \
+  -destination 'platform=iOS Simulator,name=iPhone 17'
+```
 
-## Commit Messages
+After changing `Examples/MigrationLab/project.yml`, run `xcodegen` in that folder. After changing
+the example app's screens, run `scripts/capture-example-screens.sh` to update the screenshots.
 
-We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+## Style
 
-- `feat:` A new feature
-- `fix:` A bug fix
-- `docs:` Documentation only changes
-- `style:` Code style changes (formatting, semicolons, etc)
-- `refactor:` Code change that neither fixes a bug nor adds a feature
-- `test:` Adding missing tests
-- `chore:` Changes to the build process or auxiliary tools
+- Swift 6 language mode, no dependencies, Foundation only in the library.
+- Work on scanned input must stay linear and bounded; add a test with pathological input for any
+  new parsing code.
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
-Example: `feat(deeplink): add universal link support`
-
-## License
-
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing you agree to follow the [code of conduct](CODE_OF_CONDUCT.md) and that your
+contribution is released under the [MIT license](LICENSE).

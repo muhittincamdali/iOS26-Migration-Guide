@@ -45,13 +45,39 @@ struct RepositoryTests {
         let sources = try FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)
             .filter { $0.pathExtension == "swift" }
             .map { Self.normalized(try String(contentsOf: $0, encoding: .utf8)) }
-        let blocks = text.components(separatedBy: "```swift\n").dropFirst().compactMap { $0.components(separatedBy: "\n```").first }
+        let blocks = Self.swiftBlocks(in: text)
         #expect(!blocks.isEmpty)
         // Package manifest snippets are not app code.
         for block in blocks where !block.hasPrefix("dependencies:") {
             let snippet = Self.normalized(block)
             #expect(sources.contains { $0.contains(snippet) }, "Not in the example app:\n\(block)")
         }
+    }
+
+    @Test("Code in the API articles builds as a test or is a clean scan", arguments: [
+        "Sources/MigrationScanner/MigrationScanner.docc/GettingStarted.md",
+        "Sources/MigrationScanner/MigrationScanner.docc/MigrationScanner.md"
+    ])
+    func articleSnippets(document: String) throws {
+        let blocks = Self.swiftBlocks(in: try read(document))
+        #expect(!blocks.isEmpty)
+        let compiled = Self.normalized(try read("Tests/MigrationScannerTests/DocumentationSnippetTests.swift"))
+        let libraryImport = "import MigrationScanner\n"
+        for block in blocks {
+            guard block.hasPrefix(libraryImport) else {
+                // App code that shows suppression comments: every finding in it must be suppressed.
+                let report = ProjectScanner().scan(source: block)
+                #expect(report.findings.isEmpty && report.notices.isEmpty, "\(report.findings) \(report.notices)\n\(block)")
+                continue
+            }
+            let body = block.dropFirst(libraryImport.count).trimmingCharacters(in: .newlines)
+            #expect(compiled.contains(Self.normalized(body)), "Not in DocumentationSnippetTests.swift:\n\(block)")
+        }
+    }
+
+    /// The contents of the ```swift blocks in a Markdown document.
+    private static func swiftBlocks(in text: String) -> [String] {
+        text.components(separatedBy: "```swift\n").dropFirst().compactMap { $0.components(separatedBy: "\n```").first }
     }
 
     /// Lines without their indentation, so a snippet can be shown at a different depth.

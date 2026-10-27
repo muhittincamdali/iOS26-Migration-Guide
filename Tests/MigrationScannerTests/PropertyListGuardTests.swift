@@ -35,6 +35,22 @@ private func chain(_ count: Int) -> [[Int]?] {
     (0..<count).map { [$0 + 1] } + [nil]
 }
 
+/// `count` nested XML arrays.
+private func nestedArrays(_ count: Int) -> String {
+    String(repeating: "<array>", count: count) + String(repeating: "</array>", count: count)
+}
+
+/// How deep the system parser nests the value it reads from `data`. Callers keep the nesting far
+/// below the depth that exhausts the stack, so this shows what the guard would let through.
+private func parsedDepth(_ data: Data) throws -> Int {
+    func depth(_ value: Any) -> Int {
+        if let array = value as? [Any] { return 1 + (array.map(depth).max() ?? 0) }
+        if let dictionary = value as? [String: Any] { return 1 + (dictionary.values.map(depth).max() ?? 0) }
+        return 0
+    }
+    return depth(try PropertyListSerialization.propertyList(from: data, format: nil))
+}
+
 @Suite("Property list guard")
 struct PropertyListGuardTests {
     @Test("Property lists written by the system pass")
@@ -151,10 +167,103 @@ struct PropertyListGuardTests {
         #expect(!PropertyListGuard.isSafeToParse(Data("<plist><!-- never closed <array></plist>".utf8)))
     }
 
+    /// A `<` inside a tag or a DOCTYPE literal used to open a comment, CDATA section or processing
+    /// instruction for the guard but not for the system parser, which ends both at the next `>`.
+    /// The guard then skipped to the closing sequence at the end of the file and never counted the
+    /// nesting in between, which the parser reads.
+    @Test("Markup openers inside a DOCTYPE or a tag do not hide nesting from the guard", arguments: [
+        ("<!DOCTYPE plist SYSTEM \"<!--\">", "", "<!-- end -->"),
+        ("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN <!--\" \"x\">", "", "<!-- end -->"),
+        ("", " x=\"<!--\"", "<!-- end -->"),
+        ("<!DOCTYPE plist SYSTEM \"<?\">", "", "<?end?>"),
+        ("", " x=\"<![CDATA[\"", "<!-- ]]> -->")
+    ])
+    func markupInsideDeclarations(doctype: String, attribute: String, trailer: String) throws {
+        let document = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + doctype + "\n<plist version=\"1.0\"" + attribute
+            + "><dict><key>k</key>" + nestedArrays(PropertyListGuard.maximumDepth * 3) + "</dict></plist>\n" + trailer
+        let data = Data(document.utf8)
+        #expect(try parsedDepth(data) > PropertyListGuard.maximumDepth)
+        #expect(!PropertyListGuard.isSafeToParse(data))
+    }
+
+    /// The system parser decodes the whole file in the encoding named by the XML declaration, so
+    /// in UTF-7 `+ADw-` is a `<` that a byte-level count never sees.
+    @Test("An encoding other than UTF-8, US-ASCII or ISO-8859-1 is refused")
+    func encodings() throws {
+        let count = PropertyListGuard.maximumDepth * 3
+        let hidden = String(repeating: "+ADw-array+AD4-", count: count) + String(repeating: "+ADw-/array+AD4-", count: count)
+        let utf7 = Data(("<?xml version=\"1.0\" encoding=\"UTF-7\"?><plist><array>" + hidden + "</array></plist>").utf8)
+        #expect(try parsedDepth(utf7) > PropertyListGuard.maximumDepth)
+        #expect(!PropertyListGuard.isSafeToParse(utf7))
+        for name in ["utf-7", "ISO-2022-JP", "UTF-16", "IBM037", "x-unknown"] {
+            let declared = "<?xml version=\"1.0\" encoding=\"\(name)\"?><plist><true/></plist>"
+            #expect(!PropertyListGuard.isSafeToParse(Data(declared.utf8)), "\(name)")
+        }
+        for name in ["UTF-8", "utf-8", "US-ASCII", "ISO-8859-1"] {
+            let declared = "<?xml version=\"1.0\" encoding=\"\(name)\"?><plist><true/></plist>"
+            #expect(PropertyListGuard.isSafeToParse(Data(declared.utf8)), "\(name)")
+        }
+    }
+
+    @Test("DOCTYPE subsets, misplaced declarations and markup inside processing instructions are refused", arguments: [
+        "<!DOCTYPE plist [ <!ELEMENT plist ANY> ]><plist><true/></plist>",
+        "<!DOCTYPE plist SYSTEM \"a>b\"><plist><true/></plist>",
+        "<!DOCTYPE plist SYSTEM \"<![CDATA[\"><plist><true/></plist><!-- ]]> -->",
+        "<!DOCTYPE plist SYSTEM \"x><plist><true/></plist>",
+        "<plist><array><!DOCTYPE plist></array></plist>",
+        "<!DOCTYPE plist><!DOCTYPE plist><plist><true/></plist>",
+        "<!doctype plist><plist><true/></plist>",
+        "<plist><array><!FOO x></array></plist>",
+        "<?pi > <array> ?><plist><true/></plist>",
+        "<plist version=\"1.0\"<true/></plist>",
+        "<plist><array x=\"1\"</array></plist>"
+    ])
+    func refusedMarkup(document: String) {
+        #expect(!PropertyListGuard.isSafeToParse(Data(document.utf8)))
+    }
+
+    @Test("Property lists with an Apple DOCTYPE, comments, CDATA and processing instructions still pass")
+    func validMarkup() throws {
+        let document = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+            <!-- Written by hand: <array> in a comment is text. -->
+            <plist version="1.0">
+            <dict>
+            \t<!-- The scene manifest. -->
+            \t<key>UIApplicationSceneManifest</key>
+            \t<dict>
+            \t\t<key>UISceneConfigurations</key>
+            \t\t<dict/>
+            \t</dict>
+            \t<key>Note</key>
+            \t<string><![CDATA[<array> & <dict> are text here]]></string>
+            \t<?editor fold?>
+            \t<key>UIDesignRequiresCompatibility</key>
+            \t<true/>
+            </dict>
+            </plist>
+            """
+        let data = Data(document.utf8)
+        #expect(PropertyListGuard.isSafeToParse(data))
+        #expect(try parsedDepth(data) == 3)
+    }
+
     @Test("A deep Info.plist in a project becomes a notice, not a crash")
     func deepInfoPlistInProject() throws {
         let project = try TemporaryDirectory()
         try project.write("App/Info.plist", binaryPropertyList(chain(50_000)))
         #expect(project.scan().notices.map(\.kind) == [.invalidPropertyList])
+    }
+
+    @Test("An Info.plist that hides its nesting from the guard becomes a notice")
+    func hiddenNestingInProject() throws {
+        let project = try TemporaryDirectory()
+        let document = "<!DOCTYPE plist SYSTEM \"<!--\">\n<plist><dict><key>k</key>" + nestedArrays(20_000)
+            + "</dict></plist>\n<!-- end -->"
+        try project.write("App/Info.plist", Data(document.utf8))
+        let notices = project.scan().notices
+        #expect(notices.map(\.kind) == [.invalidPropertyList])
+        #expect(notices.first?.message.contains("not a valid property list") == true)
     }
 }

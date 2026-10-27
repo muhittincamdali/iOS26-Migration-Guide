@@ -5,9 +5,10 @@ import Foundation
 /// The system parser is recursive: an XML or binary property list nested a few thousand levels
 /// deep, which fits in a few kilobytes, can exhaust the stack of the thread that parses it. An
 /// Info.plist is a shallow dictionary, so anything nested deeper than ``maximumDepth``, a binary
-/// property list whose object graph has a cycle or does not fit its own offset table, an XML
-/// document that declares entities, and the old OpenStep text format are all refused before
-/// parsing. Every check is iterative and linear in the size of the file.
+/// property list whose object graph has a cycle or does not fit its own offset table, XML that
+/// the guard could read differently from the parser (see ``XMLPropertyListScanner``), and the old
+/// OpenStep text format are all refused before parsing. Every check is iterative and linear in
+/// the size of the file.
 enum PropertyListGuard {
     static let maximumDepth = 64
     private static let binaryMagic = Array("bplist00".utf8)
@@ -17,86 +18,7 @@ enum PropertyListGuard {
         if bytes.starts(with: binaryMagic) {
             return BinaryPropertyList(bytes: bytes)?.isWithinDepth(maximumDepth) ?? false
         }
-        return isSafeXML(bytes)
-    }
-
-    // MARK: - XML
-
-    /// Counts `array` and `dict` elements in a single forward pass. Comments, CDATA sections and
-    /// processing instructions are skipped whole, so markup inside them cannot move the depth, and a
-    /// closing tag with no matching opening tag refuses the file instead of letting the count go
-    /// negative and buy room for deeper nesting later.
-    private static func isSafeXML(_ bytes: [UInt8]) -> Bool {
-        var start = 0
-        if bytes.starts(with: [0xEF, 0xBB, 0xBF]) { start = 3 }
-        while start < bytes.count, [0x20, 0x09, 0x0A, 0x0D].contains(bytes[start]) { start += 1 }
-        guard start < bytes.count, bytes[start] == UInt8(ascii: "<") else { return false }
-        if firstIndex(of: entityDeclaration, in: bytes, from: start) != nil { return false }
-        var depth = 0
-        var index = start
-        while index < bytes.count {
-            guard bytes[index] == UInt8(ascii: "<") else {
-                index += 1
-                continue
-            }
-            if let (opening, closing) = skippedSections.first(where: { hasPrefix($0.opening, in: bytes, at: index) }) {
-                guard let end = firstIndex(of: closing, in: bytes, from: index + opening.count) else { return false }
-                index = end + closing.count
-                continue
-            }
-            let isClosing = index + 1 < bytes.count && bytes[index + 1] == UInt8(ascii: "/")
-            let nameStart = index + (isClosing ? 2 : 1)
-            guard startsContainer(bytes, at: nameStart) else {
-                index += 1
-                continue
-            }
-            // Resume after the tag: rescanning it from every `<` would make hostile input quadratic.
-            let tagEnd = firstIndex(of: [UInt8(ascii: ">")], in: bytes, from: nameStart) ?? bytes.count
-            index = tagEnd + 1
-            if isClosing {
-                depth -= 1
-                if depth < 0 { return false }
-                continue
-            }
-            let isSelfClosing = tagEnd < bytes.count && bytes[tagEnd - 1] == UInt8(ascii: "/")
-            guard !isSelfClosing else { continue }
-            depth += 1
-            if depth > maximumDepth { return false }
-        }
-        return true
-    }
-
-    private static let entityDeclaration = Array("<!ENTITY".utf8)
-
-    /// Sections whose content is not markup: comments, CDATA and processing instructions.
-    private static let skippedSections: [(opening: [UInt8], closing: [UInt8])] = [
-        (Array("<!--".utf8), Array("-->".utf8)),
-        (Array("<![CDATA[".utf8), Array("]]>".utf8)),
-        (Array("<?".utf8), Array("?>".utf8))
-    ]
-
-    /// `array` or `dict` followed by `>`, `/` or whitespace.
-    private static func startsContainer(_ bytes: [UInt8], at index: Int) -> Bool {
-        for name in [Array("array".utf8), Array("dict".utf8)] {
-            let end = index + name.count
-            guard end < bytes.count, Array(bytes[index..<end]) == name else { continue }
-            if [UInt8(ascii: ">"), UInt8(ascii: "/"), 0x20, 0x09, 0x0A, 0x0D].contains(bytes[end]) { return true }
-        }
-        return false
-    }
-
-    private static func hasPrefix(_ prefix: [UInt8], in bytes: [UInt8], at index: Int) -> Bool {
-        index + prefix.count <= bytes.count && bytes[index..<(index + prefix.count)].elementsEqual(prefix)
-    }
-
-    /// The first position at or after `start` where `needle` begins. The needles are a few bytes
-    /// long, so the scan stays linear in the size of the file.
-    private static func firstIndex(of needle: [UInt8], in bytes: [UInt8], from start: Int) -> Int? {
-        guard !needle.isEmpty, start <= bytes.count - needle.count else { return nil }
-        for position in start...(bytes.count - needle.count) where bytes[position] == needle[0] {
-            if hasPrefix(needle, in: bytes, at: position) { return position }
-        }
-        return nil
+        return XMLPropertyListScanner.isWithinDepth(bytes, limit: maximumDepth)
     }
 }
 
